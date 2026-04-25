@@ -16,13 +16,22 @@ const items = [
   { href: '#production', label: 'The Farm' },
   { href: '#building',   label: 'Building' },
   { href: '#locate',     label: 'The Land' },
+  { href: '#latest',     label: 'Letters' },
 ];
 ---
 
 <nav class="nav" aria-label="Primary">
   <div class="nav__inner">
     <a class="nav__mark" href="#top" aria-label="The Hill — home">
-      <span class="nav__mark-the">The</span> <span class="nav__mark-hill">Hill</span>
+      <img
+        class="nav__mark-img"
+        src="/images/horizontal-dark-transparent.png"
+        alt="The Hill"
+        width="3000"
+        height="1020"
+        decoding="sync"
+        fetchpriority="high"
+      />
     </a>
 
     <ul class="nav__links" role="list">
@@ -118,27 +127,20 @@ const items = [
   }
 
   .nav__mark {
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: 1.5rem;
-    line-height: 1;
-    letter-spacing: 0.015em;
-    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    line-height: 0;
   }
 
-  .nav__mark-the {
-    font-style: italic;
-    color: var(--harvest-gold);
-  }
-
-  .nav__mark-hill {
-    font-style: normal;
-    color: var(--dark-body);
+  .nav__mark-img {
+    height: 36px;
+    width: auto;
+    display: block;
   }
 
   @media (max-width: 720px) {
-    .nav__mark {
-      font-size: 1.35rem;
+    .nav__mark-img {
+      height: 30px;
     }
   }
 
@@ -153,8 +155,11 @@ const items = [
 
   .nav__link {
     font-family: var(--font-sans);
-    font-size: var(--fs-body-sm);
-    color: var(--fg-on-dark-2);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dark-body);
     transition: color 0.2s ease;
   }
 
@@ -171,18 +176,22 @@ const items = [
 
   .nav__cta {
     font-family: var(--font-sans);
-    font-size: var(--fs-body-sm);
+    font-size: 13px;
     font-weight: 500;
-    color: var(--deep-forest);
-    background: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: transparent;
+    border: 1px solid var(--accent);
     padding: var(--s-3) var(--s-5);
-    border-radius: var(--r-full);
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    border-radius: var(--r-md);
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   .nav__cta:hover,
   .nav__cta:focus-visible {
-    background: color-mix(in srgb, var(--accent) 88%, white);
+    background: var(--accent);
+    color: var(--deep-forest);
   }
 
   /* Hamburger -------------------------------------------------------- */
@@ -249,11 +258,12 @@ const items = [
   }
 
   .nav__drawer-link {
-    font-family: var(--font-display);
-    font-weight: 300;
-    font-size: 32px;
-    color: var(--fg-on-dark-1);
-    letter-spacing: var(--ls-heading);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dark-body);
   }
 
   .nav__drawer-link:hover,

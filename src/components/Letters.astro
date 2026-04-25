@@ -1,0 +1,122 @@
+---
+/**
+ * Letters — design HTML's <section class="latest" id="latest">.
+ * Cream-warm interlude between Gallery (dark) and BigQuote (dark).
+ * Sibling structure to Production / Sharing-the-abundance: cream
+ * ground, deep-forest headline with italic-gold em on the noun
+ * ("farm."), sage body copy.
+ *
+ * Right column is a quiet italic-sage block ("first-letter") with
+ * an inline anchor to #subscribe — Unicode → glyph per design.
+ *
+ * The id "latest" is the design HTML's literal id; nav anchor
+ * targets it. Section retains the design's class name (.letters)
+ * scoped to the live BEM convention.
+ */
+---
+
+<section id="latest" class="section letters" aria-labelledby="letters-headline">
+  <div class="container letters__inner">
+    <div class="letters__left">
+      <p class="eyebrow letters__eyebrow">Letters</p>
+      <h2 id="letters-headline" class="letters__headline">
+        Letters from<br/>the <em>farm.</em>
+      </h2>
+      <p class="letters__body">
+        Whenever there's something worth saying. Never more than that. Long reads, mostly — about soil, mistakes, the animals, the people who show up.
+      </p>
+    </div>
+
+    <div class="letters__quiet">
+      <p class="letters__first-letter">
+        The first letter is being written.<br/>
+        <a href="#subscribe">Sign up below &rarr;</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .letters {
+    background: var(--ivory-warm);
+    color: var(--near-black);
+  }
+
+  .letters__inner {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: 120px;
+    align-items: start;
+  }
+
+  /* Eyebrow on warm bg → sage (matches design's .section.warm .eyebrow-xl). */
+  .letters__eyebrow {
+    color: var(--sage);
+    margin: 0 0 24px;
+  }
+
+  .letters__headline {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(56px, 6vw, 88px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--deep-forest);
+    margin: 0;
+  }
+
+  .letters__headline em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--muted-gold);
+  }
+
+  .letters__body {
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--sage);
+    margin-top: 32px;
+    max-width: 36ch;
+  }
+
+  /* Right column — quiet italic-sage "first letter" note + gold-underlined anchor. */
+  .letters__quiet {
+    padding-top: 12px;
+  }
+
+  .letters__first-letter {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(28px, 2.4vw, 38px);
+    line-height: 1.35;
+    color: var(--sage);
+    max-width: 30ch;
+    margin: 0;
+  }
+
+  .letters__first-letter a {
+    color: var(--deep-forest);
+    text-decoration: none;
+    border-bottom: 1px solid var(--muted-gold);
+    padding-bottom: 2px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .letters__first-letter a:hover,
+  .letters__first-letter a:focus-visible {
+    color: var(--muted-gold);
+    border-bottom-color: var(--deep-forest);
+  }
+
+  @media (max-width: 900px) {
+    .letters__inner {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    .letters__quiet {
+      padding-top: 0;
+    }
+  }
+</style>

@@ -35,9 +35,7 @@
 
     <a class="hero__scroll" href="#manifesto" aria-label="Scroll to next section">
       <span>There's more</span>
-      <svg class="hero__scroll-arrow" viewBox="0 0 20 28" aria-hidden="true">
-        <path d="M10 2 v22 M3 17 l7 7 l7-7" stroke="currentColor" stroke-width="1.25" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+      <span class="hero__scroll-line" aria-hidden="true"></span>
     </a>
   </div>
 </section>
@@ -49,11 +47,36 @@
     align-items: center;
     padding-block: clamp(64px, 9vh, 112px);
     padding-inline: var(--frame-inset);
-    background: var(--bg-dark);
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(74,104,48, 0.38) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 80%, rgba(199,159,87, 0.17) 0%, transparent 55%),
+      var(--deep-forest);
     position: relative;
+    overflow: hidden;
+  }
+
+  /* Subtle hill-curve graphic suggesting a horizon arc behind the copy. */
+  .hero::before {
+    content: "";
+    position: absolute;
+    left: -10%;
+    right: -10%;
+    bottom: -40%;
+    height: 80%;
+    border-radius: 50% / 30%;
+    background: radial-gradient(
+      ellipse at center top,
+      rgba(13,26,8,0) 0%,
+      rgba(13,26,8,0.6) 70%,
+      #000 100%
+    );
+    pointer-events: none;
+    z-index: 0;
   }
 
   .hero__inner {
+    position: relative;
+    z-index: 1;
     width: 100%;
     max-width: var(--frame-max-w);
     margin-inline: auto;
@@ -127,11 +150,13 @@
   .hero__scroll {
     display: inline-flex;
     align-items: center;
-    gap: var(--s-3);
+    gap: 16px;
     color: var(--dark-caption);
     font-family: var(--font-sans);
-    font-size: var(--fs-caption);
-    letter-spacing: var(--ls-caption);
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
     justify-self: start;
     transition: color 0.25s ease;
   }
@@ -141,15 +166,30 @@
     color: var(--accent);
   }
 
-  .hero__scroll-arrow {
-    width: 14px;
-    height: 20px;
-    animation: hero-arrow 2.4s ease-in-out infinite;
+  /* Horizontal stroke with a gold pulse — design's "There's more" cue. */
+  .hero__scroll-line {
+    position: relative;
+    display: inline-block;
+    width: 90px;
+    height: 1px;
+    background: var(--gold-35);
+    overflow: hidden;
   }
 
-  @keyframes hero-arrow {
-    0%, 100% { transform: translateY(0); opacity: 0.8; }
-    50%      { transform: translateY(4px); opacity: 1; }
+  .hero__scroll-line::after {
+    content: "";
+    position: absolute;
+    left: -40%;
+    top: 0;
+    width: 40%;
+    height: 100%;
+    background: var(--accent);
+    animation: hero-scroll-pulse 2.4s cubic-bezier(.5, 0, .3, 1) infinite;
+  }
+
+  @keyframes hero-scroll-pulse {
+    0%   { left: -40%; }
+    100% { left: 110%; }
   }
 
   @media (max-width: 720px) {

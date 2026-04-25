@@ -122,29 +122,28 @@ Submit handler builds this payload:
 }
 ```
 
-### Wiring the form provider
+### Form provider
 
 The Subscribe form posts to **[Formspark](https://formspark.io)** — chosen because it accepts a simple JSON POST from a static site (no backend needed) and keeps the custom UI intact. The integration lives in `src/components/Subscribe.astro`:
 
 ```ts
-const FORMSPARK_FORM_ID = 'FORMSPARK_FORM_ID_PLACEHOLDER';
-const FORMSPARK_ENDPOINT = `https://submit-form.com/${FORMSPARK_FORM_ID}`;
+const FORMSPARK_URL = 'https://submit-form.com/PQ024KE15';
 ```
-
-To wire it up:
-
-1. Sign in at [formspark.io](https://formspark.io) and create a form. Field schema doesn't matter — Formspark accepts arbitrary JSON keys, and the dashboard groups submissions by sender.
-2. Copy the form ID from the dashboard (the part after `submit-form.com/` in the submit URL).
-3. Paste it over `FORMSPARK_FORM_ID_PLACEHOLDER` in `Subscribe.astro`.
-4. Optional: in the Formspark dashboard, configure email notifications, a webhook to a Google Sheet / Airtable, and reCAPTCHA if spam becomes an issue.
 
 The submit handler:
 
-- POSTs the payload as JSON with `Content-Type` and `Accept: application/json`.
+- POSTs `{ channel, contact, i_am, drawn_to, submitted_at }` as JSON with `Content-Type` and `Accept: application/json`.
+- Native JSON arrays (`i_am`, `drawn_to`) are first-class per [Formspark's arrays-and-objects docs](https://documentation.formspark.io/setup/arrays-and-objects.html); the dashboard renders them readably, no flattening needed.
 - On 2xx: hides the form, reveals the on-brand confirmation block, keeps the Instagram CTA visible. Focus moves to the confirmation so screen readers announce it.
 - On non-2xx or network error: shows `"Something didn't go through. Try again?"` in the form's status line, logs to `console.error`, and re-enables the submit button so the user can retry.
 
-If you ever need to switch providers (e.g. to Fillout, Formspree, or a custom Cloudflare Worker), only the `FORMSPARK_ENDPOINT` URL and the `fetch(...)` call in the submit handler need to change. The payload shape, UI, and success/error logic stay the same.
+To switch providers (Fillout, Formspree, or a custom Cloudflare Worker), only `FORMSPARK_URL` and the `fetch(...)` call need to change. Payload shape, UI, and success/error logic stay the same.
+
+### Optional Formspark dashboard tweaks
+
+- Email notifications on each submission (default on; turn off if you don't want them).
+- Webhook to a Google Sheet, Airtable, or your ESP.
+- reCAPTCHA / honeypot if spam becomes an issue (Formspark has built-in honeypot detection; current form doesn't add an extra honeypot field — add one if needed).
 
 ## Accessibility
 
@@ -185,7 +184,7 @@ The list of things that still need user action before pointing the real domain a
 - [ ] Drop real gallery photos into `public/images/gallery/` per the slot table in that folder's README.
 - [ ] Verify the **"foothills of Pergasingan"** reference in `src/components/Locate.astro` — Pergasingan is in east Lombok (Sembalun), not Central Lombok where Darek sits. May be a Claude Design fabrication; pick the correct local mountain reference.
 - [ ] Decide image 6 in the Gallery — keep as decorative styled tile (current behavior) or replace with a real garden/produce photo + alt text.
-- [ ] Replace `FORMSPARK_FORM_ID_PLACEHOLDER` in `src/components/Subscribe.astro` with the real Formspark form ID. (The Tally form `KYPL1V` was abandoned — Tally doesn't support direct JSON POST from a custom HTML form, only iframe embed or server-side API. See git history for context.)
+- [ ] Run a live submission test against the Formspark form (`PQ024KE15`) and confirm the entry in the Formspark dashboard reads cleanly — particularly that the `i_am` and `drawn_to` arrays render readably. If they don't, swap to comma-joined strings in the submit handler in `src/components/Subscribe.astro` (one-line change). The Tally form `KYPL1V` was abandoned earlier in this build — Tally doesn't support direct JSON POST from a custom HTML form (only iframe embed or server-side API). See git history for context.
 - [ ] Confirm the Instagram handle `@thehill_lombok` and the `hello@thehill.id` email are real and routed.
 - [ ] Confirm the `site` value in `astro.config.mjs` is the right deploy domain (currently `https://thehill.id`).
 - [ ] Replace the Locate section's stylized SVG map with the full island-orientation map per `TODO-DESIGN-01` in the copy doc (separate design pass).

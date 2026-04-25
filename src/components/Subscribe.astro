@@ -187,10 +187,14 @@ const COUNTRY_CODES = [
 
 <script>
   // Subscribe form behaviour ----------------------------------------
-  // Submits to Formspark (https://documentation.formspark.io/examples/ajax.html).
-  // Endpoint pattern: POST https://submit-form.com/{FORMSPARK_FORM_ID}
-  // Body: JSON.stringify(payload), Content-Type + Accept: application/json
-  // CORS is allowed for direct browser submissions; 200 on success.
+  // Submits to Formspark — https://documentation.formspark.io/examples/ajax.html
+  //   POST https://submit-form.com/{FORM_ID}
+  //   Content-Type + Accept: application/json
+  //   Body: JSON.stringify(payload)
+  // CORS is enabled for browser submissions. Native JSON arrays
+  // (i_am, drawn_to) are first-class per Formspark's "arrays and
+  // objects" docs and render readably in the submissions dashboard;
+  // no flattening required.
 
   const form        = document.querySelector<HTMLFormElement>('[data-subscribe-form]');
   const emailWrap   = document.querySelector<HTMLElement>('[data-contact-email]');
@@ -199,10 +203,7 @@ const COUNTRY_CODES = [
   const statusEl    = form?.querySelector<HTMLElement>('[data-status]');
   const successEl   = document.querySelector<HTMLElement>('[data-subscribe-success]');
 
-  // Formspark form ID — REPLACE with the real ID before deploy.
-  // Find it in your Formspark dashboard (Submit URL ends in /{FORM_ID}).
-  const FORMSPARK_FORM_ID = 'FORMSPARK_FORM_ID_PLACEHOLDER';
-  const FORMSPARK_ENDPOINT = `https://submit-form.com/${FORMSPARK_FORM_ID}`;
+  const FORMSPARK_URL = 'https://submit-form.com/PQ024KE15';
 
   const ERROR_MESSAGE = "Something didn't go through. Try again?";
 
@@ -264,7 +265,7 @@ const COUNTRY_CODES = [
       delete statusEl.dataset.tone;
 
       try {
-        const res = await fetch(FORMSPARK_ENDPOINT, {
+        const res = await fetch(FORMSPARK_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

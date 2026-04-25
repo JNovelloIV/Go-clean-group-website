@@ -1,0 +1,18 @@
+# Cloudflare Pages / Netlify _headers file
+# Format: https://developers.cloudflare.com/pages/configuration/headers/
+
+# Long-cache the immutable, hashed asset chunks Astro produces.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Long-cache the self-hosted fonts. Filenames are stable and rarely change.
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+# Sensible defaults for everything else — restrained, no CSP yet.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: interest-cohort=(), browsing-topics=()

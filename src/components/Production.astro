@@ -1,0 +1,252 @@
+---
+/**
+ * Production — §4 "The farm".
+ * TWO parts:
+ *   (a) the four panels: garden, forest, ponds, animals.
+ *   (b) the "Sharing the abundance" closing block — mini-headline,
+ *       lead, two rows, closing line. Renders on a LIGHT cream
+ *       background per the brief.
+ *
+ * All copy verbatim from the doc; italic emphasis preserved on:
+ *   - "growing" in the section headline
+ *   - "fresh" in the intro
+ *   - "Nothing wasted. Nothing pretending." in the animals panel
+ *   - "A few chefs" / "The long table" row leads
+ */
+
+const panels = [
+  {
+    name: 'The garden',
+    body:
+      'Ninety-six beds, thirty-plus varietals. Greens, roots, herbs — the things most kitchens buy from a truck. We pick what’s ready, cook what we pick. Forty more beds going in.',
+  },
+  {
+    name: 'The forest',
+    body:
+      'One syntropic grove — fifteen fruit trees and perennials layered together, feeding each other from their own fallen leaves. Two more are going in.',
+  },
+  {
+    name: 'The ponds',
+    body:
+      'Giant gurami in the fish pond, growing slow and sweet. The flock on the other, most mornings. Both ponds raise themselves once the system is right.',
+  },
+  {
+    name: 'The animals',
+    body: null, // rendered inline below to preserve italic emphasis safely
+  },
+];
+---
+
+<section id="production" aria-labelledby="production-headline">
+  <!-- Part (a): four panels on dark ground -------------------------- -->
+  <div class="section production">
+    <div class="container production__inner">
+      <p class="eyebrow">The farm</p>
+
+      <h2 id="production-headline" class="production__headline">
+        What's <em>growing</em><br/>on the hill.
+      </h2>
+
+      <p class="production__intro">
+        Everything you eat here grew within earshot of the table. No chemicals. No shipping containers. No <em>"fresh"</em> that flew in from two islands away.
+      </p>
+
+      <ul class="production__panels" role="list">
+        {panels.map((panel) => (
+          <li class="production__panel">
+            <h3 class="production__panel-name">{panel.name}</h3>
+            {panel.body && <p class="production__panel-body">{panel.body}</p>}
+            {panel.name === 'The animals' && (
+              <p class="production__panel-body">
+                Chickens, ducks, quail, rabbits, goats. Each one has a job — fertilising, clearing, grazing, laying. <em>Nothing wasted. Nothing pretending.</em>
+              </p>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  <!-- Part (b): "Sharing the abundance" — light cream ground -------- -->
+  <div class="section section--light production-share">
+    <div class="container production-share__inner">
+      <h3 class="production-share__mini">Sharing the abundance.</h3>
+
+      <p class="production-share__lead">
+        The food we grow goes first to the team, their families, our neighbors. A couple of veggie stands in the surrounding villages carry what we can spare. Sharing is built into the model — the more we grow, the wider the circle.
+      </p>
+
+      <ul class="production-share__rows" role="list">
+        <li class="production-share__row">
+          <p>
+            <strong>A few chefs</strong> — the kind who taste every raw ingredient before they design a menu, who care where it grew, who cook with the seasons. Quietly, by relationship.
+          </p>
+        </li>
+        <li class="production-share__row">
+          <p>
+            <strong>The long table</strong> — a few times a season, we cook a meal from what's ready. Small. Dinner ends around the fire — guitars come out, a drum gets passed, nobody checks the time.
+          </p>
+        </li>
+      </ul>
+
+      <p class="production-share__close">
+        Health-conscious eaters, more chefs, the restaurant we're building toward — as the circle widens, we'll write when there's room.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .production {
+    background: var(--bg-dark);
+  }
+
+  .production__inner {
+    display: grid;
+    gap: var(--s-10);
+  }
+
+  .production__headline {
+    font-size: clamp(40px, 6vw, 84px);
+    font-weight: 300;
+    color: var(--fg-on-dark-1);
+    line-height: var(--lh-display);
+    letter-spacing: var(--ls-display);
+    max-width: 14ch;
+  }
+
+  .production__intro {
+    font-family: var(--font-display);
+    font-weight: 300;
+    color: var(--fg-on-dark-1);
+    font-size: clamp(20px, 1.9vw, 28px);
+    line-height: 1.5;
+    max-width: 56ch;
+  }
+
+  .production__panels {
+    list-style: none;
+    margin: var(--s-8) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: clamp(32px, 5vw, 96px);
+    row-gap: var(--s-12);
+  }
+
+  .production__panel {
+    display: grid;
+    gap: var(--s-4);
+    padding-top: var(--s-6);
+    border-top: 1px solid var(--gold-28);
+  }
+
+  .production__panel-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-style: italic;
+    font-size: clamp(24px, 2.4vw, 32px);
+    color: var(--accent);
+    letter-spacing: var(--ls-heading);
+  }
+
+  .production__panel-body {
+    font-family: var(--font-sans);
+    color: var(--dark-body);
+    font-size: var(--fs-body-sm);
+    line-height: var(--lh-body);
+    max-width: 38ch;
+  }
+
+  /* Sharing the abundance ------------------------------------------- */
+  .production-share__inner {
+    display: grid;
+    gap: var(--s-10);
+    max-width: 920px;
+    margin-inline: auto;
+    text-align: center;
+    padding-block: var(--s-8);
+  }
+
+  .production-share__mini {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--accent-on-light);
+    font-size: clamp(28px, 3.2vw, 42px);
+    letter-spacing: var(--ls-heading);
+  }
+
+  .production-share__lead {
+    font-family: var(--font-display);
+    font-weight: 300;
+    color: var(--near-black);
+    font-size: clamp(20px, 1.8vw, 26px);
+    line-height: 1.55;
+    max-width: 60ch;
+    margin-inline: auto;
+  }
+
+  .production-share__rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-8);
+    text-align: left;
+    max-width: 56ch;
+    margin-inline: auto;
+  }
+
+  .production-share__row {
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--ink-12);
+  }
+
+  .production-share__row p {
+    font-family: var(--font-sans);
+    color: var(--near-black);
+    font-size: var(--fs-body-sm);
+    line-height: var(--lh-body);
+  }
+
+  .production-share__row strong {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(20px, 1.8vw, 26px);
+    color: var(--accent-on-light);
+    display: inline;
+  }
+
+  .production-share__close {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--sage-deep); /* 4.85:1 on ivory — passes WCAG AA */
+    font-size: clamp(18px, 1.6vw, 22px);
+    line-height: 1.55;
+    max-width: 60ch;
+    margin-inline: auto;
+    padding-top: var(--s-6);
+    border-top: 1px solid var(--gold-20);
+  }
+
+  @media (max-width: 720px) {
+    .production__panels {
+      grid-template-columns: 1fr;
+      row-gap: var(--s-10);
+    }
+    .production-share__inner {
+      text-align: left;
+    }
+    .production-share__mini,
+    .production-share__lead,
+    .production-share__close {
+      text-align: left;
+      margin-inline: 0;
+    }
+    .production-share__rows {
+      margin-inline: 0;
+    }
+  }
+</style>

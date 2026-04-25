@@ -1,0 +1,744 @@
+---
+/**
+ * Subscribe — §9 "Stay close".
+ *
+ * Custom-styled dual-channel form per TODO-DESIGN-06. Built in code
+ * (not a Tally iframe) so the chip aesthetic, channel chooser, and
+ * conditional contact field can match the brand exactly.
+ *
+ * MILESTONE 2 SCOPE:
+ *   - Full form UI rendered, accessible, keyboard-navigable.
+ *   - Validation logic in place (email format / phone format).
+ *   - Submit button gated on a valid contact value.
+ *   - On submit, the payload shape required by the brief is built
+ *     and posted to a STUBBED endpoint. Tally form ID is a clearly-
+ *     labeled placeholder; the user supplies the real ID in M3.
+ *
+ *   - SUCCESS state shows a quiet thank-you line.
+ *   - ERROR state shows a quiet retry line.
+ *
+ * MILESTONE 3 will replace the stub with the real Tally endpoint.
+ */
+
+const Q1_OPTIONS = [
+  'A neighbor on Lombok',
+  'A chef',
+  'An expat looking for clean food',
+  'A traveler curious about the hill',
+  'Just here for the letters',
+];
+
+const Q2_OPTIONS = [
+  "Weekly produce, when it's available",
+  'The long table dinners',
+  'Sourcing for my kitchen',
+  'The slow build of a place',
+  'Getting my hands in the soil',
+];
+
+// Subset of country dial codes — covers The Hill's likely audience.
+// The user can extend this list later. +62 (Indonesia) is the default.
+const COUNTRY_CODES = [
+  { code: '+62',  label: 'Indonesia' },
+  { code: '+61',  label: 'Australia' },
+  { code: '+1',   label: 'USA / Canada' },
+  { code: '+44',  label: 'United Kingdom' },
+  { code: '+33',  label: 'France' },
+  { code: '+49',  label: 'Germany' },
+  { code: '+31',  label: 'Netherlands' },
+  { code: '+34',  label: 'Spain' },
+  { code: '+39',  label: 'Italy' },
+  { code: '+41',  label: 'Switzerland' },
+  { code: '+46',  label: 'Sweden' },
+  { code: '+45',  label: 'Denmark' },
+  { code: '+47',  label: 'Norway' },
+  { code: '+65',  label: 'Singapore' },
+  { code: '+60',  label: 'Malaysia' },
+  { code: '+66',  label: 'Thailand' },
+  { code: '+81',  label: 'Japan' },
+  { code: '+82',  label: 'South Korea' },
+  { code: '+86',  label: 'China' },
+  { code: '+91',  label: 'India' },
+  { code: '+852', label: 'Hong Kong' },
+  { code: '+64',  label: 'New Zealand' },
+];
+---
+
+<section id="subscribe" class="section subscribe" aria-labelledby="subscribe-headline">
+  <div class="container subscribe__inner">
+    <p class="eyebrow">Stay close</p>
+
+    <h2 id="subscribe-headline" class="subscribe__headline">
+      Follow the <em>hill.</em>
+    </h2>
+
+    <p class="subscribe__lead">
+      Three of us, hands in the soil. No funnels, no drip sequences. When there's a popup dinner, a workshop, a long table to share — we'll write or message. The daily work is on Instagram.
+    </p>
+
+    <form
+      class="subscribe__form"
+      data-subscribe-form
+      novalidate
+      aria-describedby="subscribe-fineprint"
+    >
+      <fieldset class="subscribe__channel" data-channel-group>
+        <legend class="subscribe__legend">How should we reach you?</legend>
+        <div class="subscribe__segmented" role="radiogroup" aria-label="Contact channel">
+          <label class="subscribe__seg-option">
+            <input type="radio" name="channel" value="email" checked />
+            <span>Email</span>
+          </label>
+          <label class="subscribe__seg-option">
+            <input type="radio" name="channel" value="whatsapp" />
+            <span>WhatsApp</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="subscribe__contact" data-contact-email>
+        <label class="sr-only" for="contact-email">Email address</label>
+        <input
+          id="contact-email"
+          type="email"
+          name="email"
+          placeholder="you@email.com"
+          autocomplete="email"
+          inputmode="email"
+        />
+      </div>
+
+      <div class="subscribe__contact subscribe__contact--phone" data-contact-whatsapp hidden>
+        <label class="sr-only" for="contact-cc">Country code</label>
+        <select id="contact-cc" name="country_code" class="subscribe__cc">
+          {COUNTRY_CODES.map((c) => (
+            <option value={c.code} selected={c.code === '+62'}>{c.code} {c.label}</option>
+          ))}
+        </select>
+        <label class="sr-only" for="contact-phone">WhatsApp number</label>
+        <input
+          id="contact-phone"
+          type="tel"
+          name="phone"
+          placeholder="WhatsApp number"
+          autocomplete="tel-national"
+          inputmode="tel"
+        />
+      </div>
+
+      <fieldset class="subscribe__chips">
+        <legend class="subscribe__chips-legend">
+          I am... <span class="subscribe__chips-hint">(optional, pick any)</span>
+        </legend>
+        <div class="subscribe__chips-row">
+          {Q1_OPTIONS.map((opt) => {
+            const isChef = opt === 'A chef';
+            return (
+              <label class="chip">
+                <input
+                  type="checkbox"
+                  name="i_am"
+                  value={opt}
+                  data-chef={isChef ? '' : null}
+                  aria-controls={isChef ? 'subscribe-chef-extras' : null}
+                />
+                <span>{opt}</span>
+              </label>
+            );
+          })}
+        </div>
+      </fieldset>
+
+      <fieldset class="subscribe__chips">
+        <legend class="subscribe__chips-legend">
+          I'm drawn to... <span class="subscribe__chips-hint">(optional, pick any)</span>
+        </legend>
+        <div class="subscribe__chips-row">
+          {Q2_OPTIONS.map((opt) => (
+            <label class="chip">
+              <input type="checkbox" name="drawn_to" value={opt} />
+              <span>{opt}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <div
+        class="subscribe__chef-extras"
+        id="subscribe-chef-extras"
+        data-chef-extras
+        role="group"
+        aria-label="Chef details, optional"
+        hidden
+      >
+        <div class="subscribe__chef-field">
+          <label class="sr-only" for="chef-name">Your name</label>
+          <input
+            id="chef-name"
+            type="text"
+            name="name"
+            placeholder="Your name"
+            autocomplete="name"
+          />
+        </div>
+        <div class="subscribe__chef-field">
+          <label class="sr-only" for="chef-kitchen">Where you cook</label>
+          <input
+            id="chef-kitchen"
+            type="text"
+            name="where_you_cook"
+            placeholder="Restaurant or kitchen, location"
+            autocomplete="organization"
+          />
+        </div>
+      </div>
+
+      <p class="sr-only" data-chef-announce aria-live="polite"></p>
+
+      <div class="subscribe__submit-row">
+        <button class="subscribe__submit" type="submit" disabled>Subscribe</button>
+      </div>
+
+      <p
+        class="subscribe__status"
+        data-status
+        role="status"
+        aria-live="polite"
+      ></p>
+
+      <p id="subscribe-fineprint" class="subscribe__fineprint">
+        Free &amp; quiet. Unsubscribe anytime — reply STOP on WhatsApp, or unsubscribe from any email. We won't share your contact — we barely check ours.
+      </p>
+    </form>
+
+    <div class="subscribe__success" data-subscribe-success hidden role="status" aria-live="polite">
+      <p class="subscribe__success-line">
+        We've got you. We'll write or message when there's room.
+      </p>
+    </div>
+
+    <div class="subscribe__instagram">
+      <a href="https://instagram.com/thehill_lombok" class="subscribe__ig-cta" rel="me noopener" target="_blank">
+        Follow on Instagram
+      </a>
+      <span class="subscribe__ig-handle">@thehill_lombok</span>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Subscribe form behaviour ----------------------------------------
+  // Submits to Formspark — https://documentation.formspark.io/examples/ajax.html
+  //   POST https://submit-form.com/{FORM_ID}
+  //   Content-Type + Accept: application/json
+  //   Body: JSON.stringify(payload)
+  // CORS is enabled for browser submissions. Native JSON arrays
+  // (i_am, drawn_to) are first-class per Formspark's "arrays and
+  // objects" docs and render readably in the submissions dashboard;
+  // no flattening required.
+
+  const form        = document.querySelector<HTMLFormElement>('[data-subscribe-form]');
+  const emailWrap   = document.querySelector<HTMLElement>('[data-contact-email]');
+  const phoneWrap   = document.querySelector<HTMLElement>('[data-contact-whatsapp]');
+  const submitBtn   = form?.querySelector<HTMLButtonElement>('.subscribe__submit');
+  const statusEl    = form?.querySelector<HTMLElement>('[data-status]');
+  const successEl   = document.querySelector<HTMLElement>('[data-subscribe-success]');
+  const chefExtras  = form?.querySelector<HTMLElement>('[data-chef-extras]');
+  const chefAnnounce = form?.querySelector<HTMLElement>('[data-chef-announce]');
+
+  const FORMSPARK_URL = 'https://submit-form.com/PQ024KE15';
+
+  const ERROR_MESSAGE = "Something didn't go through. Try again?";
+
+  if (form && emailWrap && phoneWrap && submitBtn && statusEl && successEl && chefExtras && chefAnnounce) {
+    const channelInputs = form.querySelectorAll<HTMLInputElement>('input[name="channel"]');
+    const emailInput    = form.querySelector<HTMLInputElement>('#contact-email');
+    const phoneInput    = form.querySelector<HTMLInputElement>('#contact-phone');
+    const chefCheckbox  = form.querySelector<HTMLInputElement>('input[name="i_am"][data-chef]');
+    const chefNameInput = form.querySelector<HTMLInputElement>('#chef-name');
+    const chefKitchenInput = form.querySelector<HTMLInputElement>('#chef-kitchen');
+
+    // Reveal/hide chef-only fields. Two-frame RAF before adding the
+    // .is-revealed class lets the browser apply the from-state styles
+    // first so the opacity/transform actually transition. On hide we
+    // remove the class (fade out), then after the transition completes
+    // restore `hidden` and clear values so a later re-check starts
+    // fresh — values aren't sent on submit while hidden anyway.
+    const PREFERS_REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const TRANSITION_MS = PREFERS_REDUCED ? 0 : 220;
+    let chefShown = false;
+    let chefHideTimer: number | null = null;
+
+    const setChefVisible = (show: boolean) => {
+      if (show === chefShown) return;
+      chefShown = show;
+
+      if (chefHideTimer !== null) {
+        window.clearTimeout(chefHideTimer);
+        chefHideTimer = null;
+      }
+
+      if (show) {
+        chefExtras.hidden = false;
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            if (chefShown) chefExtras.classList.add('is-revealed');
+          });
+        });
+        chefAnnounce.textContent = 'Optional chef fields revealed: your name, where you cook.';
+      } else {
+        chefExtras.classList.remove('is-revealed');
+        chefAnnounce.textContent = '';
+        chefHideTimer = window.setTimeout(() => {
+          if (!chefShown) {
+            chefExtras.hidden = true;
+            if (chefNameInput) chefNameInput.value = '';
+            if (chefKitchenInput) chefKitchenInput.value = '';
+          }
+          chefHideTimer = null;
+        }, TRANSITION_MS);
+      }
+    };
+
+    chefCheckbox?.addEventListener('change', () => {
+      setChefVisible(!!chefCheckbox.checked);
+    });
+
+    const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+    const isValidPhone = (v: string) => /^[0-9 \-()]{6,}$/.test(v.trim());
+
+    const currentChannel = (): 'email' | 'whatsapp' => {
+      const c = form.querySelector<HTMLInputElement>('input[name="channel"]:checked');
+      return (c?.value as 'email' | 'whatsapp') ?? 'email';
+    };
+
+    const updateGate = () => {
+      const ch = currentChannel();
+      const valid = ch === 'email'
+        ? !!emailInput && isValidEmail(emailInput.value)
+        : !!phoneInput && isValidPhone(phoneInput.value);
+      submitBtn.disabled = !valid;
+    };
+
+    const setChannel = (ch: 'email' | 'whatsapp') => {
+      emailWrap.toggleAttribute('hidden', ch !== 'email');
+      phoneWrap.toggleAttribute('hidden', ch !== 'whatsapp');
+      updateGate();
+    };
+
+    channelInputs.forEach((input) => {
+      input.addEventListener('change', () => setChannel(currentChannel()));
+    });
+
+    emailInput?.addEventListener('input', updateGate);
+    phoneInput?.addEventListener('input', updateGate);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const ch = currentChannel();
+      const contact = ch === 'email'
+        ? (emailInput?.value.trim() ?? '')
+        : `${(form.querySelector<HTMLSelectElement>('#contact-cc')?.value ?? '+62')}${(phoneInput?.value.trim() ?? '')}`;
+
+      const i_am     = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="i_am"]:checked')).map((c) => c.value);
+      const drawn_to = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="drawn_to"]:checked')).map((c) => c.value);
+
+      const payload: Record<string, unknown> = {
+        channel: ch,
+        contact,
+        i_am,
+        drawn_to,
+        submitted_at: new Date().toISOString(),
+      };
+
+      // Chef-only fields: included only when the chef chip is checked
+      // AND the user actually typed something. Empty strings are omitted
+      // so dashboard rows stay clean.
+      if (chefCheckbox?.checked) {
+        const nameVal    = chefNameInput?.value.trim()    ?? '';
+        const kitchenVal = chefKitchenInput?.value.trim() ?? '';
+        if (nameVal)    payload.name           = nameVal;
+        if (kitchenVal) payload.where_you_cook = kitchenVal;
+      }
+
+      submitBtn.disabled = true;
+      statusEl.textContent = '';
+      delete statusEl.dataset.tone;
+
+      try {
+        const res = await fetch(FORMSPARK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept':       'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+          throw new Error(`Formspark responded ${res.status}`);
+        }
+
+        // Success — hide the form, reveal the confirmation block, keep
+        // the Instagram CTA visible below it. Move focus to the
+        // confirmation so screen readers announce it.
+        form.hidden = true;
+        successEl.hidden = false;
+        successEl.setAttribute('tabindex', '-1');
+        successEl.focus({ preventScroll: true });
+      } catch (err) {
+        console.error('[Subscribe] submission failed:', err);
+        statusEl.textContent = ERROR_MESSAGE;
+        statusEl.dataset.tone = 'error';
+        // Re-enable the button so the user can retry. Re-validate first
+        // so it stays disabled if they cleared the field meanwhile.
+        updateGate();
+      }
+    });
+
+    setChannel('email');
+  }
+</script>
+
+<style>
+  .subscribe {
+    background: var(--bg-dark);
+  }
+
+  .subscribe__inner {
+    display: grid;
+    gap: var(--s-8);
+    max-width: 720px;
+    margin-inline: auto;
+  }
+
+  .subscribe__headline {
+    font-size: clamp(40px, 6vw, 84px);
+    font-weight: 300;
+    color: var(--fg-on-dark-1);
+    line-height: var(--lh-display);
+    letter-spacing: var(--ls-display);
+  }
+
+  .subscribe__lead {
+    font-family: var(--font-display);
+    font-weight: 300;
+    color: var(--fg-on-dark-1);
+    font-size: clamp(20px, 1.9vw, 26px);
+    line-height: 1.5;
+    max-width: 56ch;
+  }
+
+  .subscribe__form {
+    display: grid;
+    gap: var(--s-8);
+    margin-top: var(--s-4);
+  }
+
+  .subscribe__legend,
+  .subscribe__chips-legend {
+    font-family: var(--font-sans);
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--dark-eyebrow);
+    font-weight: 500;
+    margin-bottom: var(--s-3);
+  }
+
+  .subscribe__chips-hint {
+    text-transform: none;
+    letter-spacing: var(--ls-caption);
+    color: var(--dark-caption);
+    font-weight: 400;
+    margin-left: var(--s-2);
+  }
+
+  .subscribe__channel {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  .subscribe__segmented {
+    display: inline-flex;
+    border: 1px solid var(--gold-28);
+    border-radius: var(--r-full);
+    overflow: hidden;
+    background: var(--forest-mid);
+  }
+
+  .subscribe__seg-option {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .subscribe__seg-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .subscribe__seg-option span {
+    display: inline-block;
+    padding: var(--s-3) var(--s-6);
+    font-family: var(--font-sans);
+    font-size: var(--fs-body-sm);
+    color: var(--dark-body);
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .subscribe__seg-option input:checked + span {
+    background: var(--accent);
+    color: var(--deep-forest);
+    font-weight: 500;
+  }
+
+  .subscribe__seg-option input:focus-visible + span {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* Contact field --------------------------------------------------- */
+  .subscribe__contact {
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  .subscribe__contact--phone {
+    grid-template-columns: minmax(140px, 200px) 1fr;
+    gap: var(--s-3);
+  }
+
+  .subscribe__form input[type="email"],
+  .subscribe__form input[type="tel"],
+  .subscribe__form select {
+    width: 100%;
+    padding: var(--s-4) var(--s-5);
+    background: var(--forest-mid);
+    color: var(--fg-on-dark-1);
+    border: 1px solid var(--gold-20);
+    border-radius: var(--r-md);
+    font-family: var(--font-sans);
+    font-size: var(--fs-body-sm);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .subscribe__form input::placeholder {
+    /* 5.57:1 on forest-mid input bg — passes WCAG AA. */
+    color: var(--dark-body);
+    opacity: 1;
+  }
+
+  .subscribe__form input:focus,
+  .subscribe__form select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  /* Chips ----------------------------------------------------------- */
+  .subscribe__chips {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  .subscribe__chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+  }
+
+  .chip {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .chip span {
+    display: inline-block;
+    padding: var(--s-3) var(--s-5);
+    font-family: var(--font-sans);
+    font-size: var(--fs-body-sm);
+    /* Text uses the AA-passing dark-caption; border keeps the
+       quieter sage tone (3.31:1 on deep-forest passes WCAG UI 3:1). */
+    color: var(--dark-caption);
+    border: 1px solid var(--sage);
+    border-radius: var(--r-full);
+    background: transparent;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .chip:hover span {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .chip input:checked + span {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--gold-20);
+  }
+
+  .chip input:focus-visible + span {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* Chef-only extras ------------------------------------------------ */
+  /* Hidden by default via the [hidden] attribute. When unhidden the
+     two-frame RAF in the script adds .is-revealed, which fades the
+     wrapper in from a 4px lift. Sub-200ms transition matches the
+     restraint of the rest of the form. Reduced-motion is handled
+     globally in base.css. */
+  .subscribe__chef-extras {
+    display: grid;
+    gap: var(--s-3);
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .subscribe__chef-extras.is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+
+  .subscribe__chef-extras input[type="text"] {
+    width: 100%;
+    padding: var(--s-4) var(--s-5);
+    background: var(--forest-mid);
+    color: var(--fg-on-dark-1);
+    border: 1px solid var(--gold-20);
+    border-radius: var(--r-md);
+    font-family: var(--font-sans);
+    font-size: var(--fs-body-sm);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .subscribe__chef-extras input[type="text"]::placeholder {
+    color: var(--dark-body);
+    opacity: 1;
+  }
+
+  .subscribe__chef-extras input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  /* Submit ---------------------------------------------------------- */
+  .subscribe__submit-row {
+    margin-top: var(--s-2);
+  }
+
+  .subscribe__submit {
+    font-family: var(--font-sans);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    color: var(--deep-forest);
+    background: var(--accent);
+    padding: var(--s-4) var(--s-10);
+    border: 0;
+    border-radius: var(--r-full);
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+  }
+
+  .subscribe__submit:hover:not(:disabled),
+  .subscribe__submit:focus-visible:not(:disabled) {
+    background: color-mix(in srgb, var(--accent) 88%, white);
+  }
+
+  .subscribe__submit:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* Status / fine print --------------------------------------------- */
+  .subscribe__status {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--accent);
+    font-size: clamp(18px, 1.6vw, 22px);
+    min-height: 1.5em;
+  }
+
+  /* Inline error tone — restrained, sage rather than red. WCAG-AA on
+     the Deep Forest section bg (--dark-body 7.02:1). */
+  .subscribe__status[data-tone="error"] {
+    color: var(--dark-body);
+  }
+
+  /* Post-submit success block — replaces the form, keeps IG visible. */
+  .subscribe__success {
+    padding-top: var(--s-4);
+  }
+
+  .subscribe__success-line {
+    font-family: var(--font-display);
+    font-weight: 300;
+    color: var(--fg-on-dark-1);
+    font-size: clamp(22px, 2.2vw, 32px);
+    line-height: 1.4;
+    letter-spacing: var(--ls-heading);
+    max-width: 30ch;
+  }
+
+  .subscribe__success:focus {
+    outline: none;
+  }
+
+  .subscribe__fineprint {
+    font-family: var(--font-sans);
+    font-size: var(--fs-caption);
+    color: var(--dark-caption);
+    line-height: 1.7;
+    max-width: 60ch;
+  }
+
+  /* Instagram ------------------------------------------------------- */
+  .subscribe__instagram {
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-4);
+    margin-top: var(--s-6);
+    padding-top: var(--s-6);
+    border-top: var(--border-hairline-dark);
+    flex-wrap: wrap;
+  }
+
+  .subscribe__ig-cta {
+    font-family: var(--font-sans);
+    font-size: var(--fs-body-sm);
+    font-weight: 500;
+    color: var(--accent);
+    border-bottom: 1px solid var(--gold-35);
+    padding-bottom: 2px;
+    transition: border-color 0.2s ease;
+  }
+
+  .subscribe__ig-cta:hover,
+  .subscribe__ig-cta:focus-visible {
+    border-color: var(--accent);
+  }
+
+  .subscribe__ig-handle {
+    font-family: var(--font-sans);
+    font-size: var(--fs-caption);
+    color: var(--dark-caption);
+    letter-spacing: var(--ls-caption);
+  }
+
+  @media (max-width: 720px) {
+    .subscribe__contact--phone {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,31 @@
+/* =========================================================================
+   The Hill — font faces
+   Self-hosted variable-font woff2 from Google Fonts (latin subset).
+   Files live in /public/fonts/.
+     Cormorant Garamond — roman & italic, weights 300–500
+     DM Sans            — roman,          weights 400–500
+   ========================================================================= */
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('/fonts/cormorant-garamond.woff2') format('woff2');
+  font-weight: 300 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('/fonts/cormorant-garamond-italic.woff2') format('woff2');
+  font-weight: 300 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/dm-sans.woff2') format('woff2');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+}

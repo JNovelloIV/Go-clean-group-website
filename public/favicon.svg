@@ -1,0 +1,18 @@
+<!--
+  The Hill — favicon placeholder
+  Deep Forest #1A3214 ground with a Harvest Gold #C8A050 serif H.
+  Replace with the final mushroom-with-roots mark when supplied.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="10" fill="#1A3214"/>
+  <text
+    x="32"
+    y="44"
+    text-anchor="middle"
+    font-family="'Cormorant Garamond', 'EB Garamond', Garamond, serif"
+    font-style="italic"
+    font-weight="500"
+    font-size="44"
+    fill="#C8A050"
+  >H</text>
+</svg>

@@ -1,0 +1,144 @@
+---
+/**
+ * Building — §5 "What we're building".
+ * Five numbered rows. The italic-emphasis word in each name is the
+ * brand pattern: Villa, kitchen, shala, stays, fully.
+ */
+
+const rows = [
+  { num: '01', name: 'Hill House',     emphasis: 'Villa',     description: 'Open-air, overlooking rice fields and mountains. Full kitchen, lounge. Our first place to host.', status: 'Built' },
+  { num: '02', name: 'The',            emphasis: 'kitchen',   description: 'Commercial kitchen, dining room, community kitchen. Where the harvest becomes the table.',         status: 'Next',  trail: ' & dining' },
+  { num: '03', name: 'Yoga',           emphasis: 'shala',     description: 'Open to the hill. For stillness, for practice.',                                                  status: 'Next' },
+  { num: '04', name: 'Three more',     emphasis: 'stays',     description: 'Eco-friendly, low-impact, built by neighbours.',                                                  status: 'Then' },
+  { num: '05', name: 'Open,',          emphasis: 'fully',     description: 'Gatherings, stays, residencies. When the soil is ready — not before.',                            status: 'Eventually' },
+];
+---
+
+<section id="building" class="section building" aria-labelledby="building-headline">
+  <div class="container building__inner">
+    <h2 id="building-headline" class="building__headline">
+      What we're <em>building</em>.
+    </h2>
+
+    <p class="building__intro">
+      We became stewards in mid-2024. The Hill House villa is already hosting. We've paused new events for a season — to finish the soil, expand the gardens, and add a few more structures. By the time we open fully, the hill will be ready.
+    </p>
+
+    <ol class="building__rows" role="list">
+      {rows.map((row) => (
+        <li class="building__row">
+          <span class="building__num">{row.num}</span>
+          <span class="building__name">
+            {row.name} <em>{row.emphasis}</em>{row.trail ?? ''}
+          </span>
+          <span class="building__desc">{row.description}</span>
+          <span class="building__status">{row.status}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .building {
+    background: var(--bg-dark);
+  }
+
+  .building__inner {
+    display: grid;
+    gap: var(--s-10);
+  }
+
+  .building__headline {
+    font-size: clamp(40px, 6vw, 84px);
+    font-weight: 300;
+    color: var(--fg-on-dark-1);
+    line-height: var(--lh-display);
+    letter-spacing: var(--ls-display);
+    max-width: 14ch;
+  }
+
+  .building__intro {
+    font-family: var(--font-display);
+    font-weight: 300;
+    color: var(--fg-on-dark-1);
+    font-size: clamp(20px, 1.9vw, 28px);
+    line-height: 1.5;
+    max-width: 60ch;
+  }
+
+  .building__rows {
+    list-style: none;
+    margin: var(--s-6) 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+  }
+
+  .building__row {
+    display: grid;
+    grid-template-columns: 64px minmax(180px, 1.6fr) minmax(0, 3fr) minmax(110px, auto);
+    gap: var(--s-6);
+    align-items: baseline;
+    padding-block: var(--s-6);
+    border-top: var(--border-hairline-dark);
+  }
+
+  .building__row:last-child {
+    border-bottom: var(--border-hairline-dark);
+  }
+
+  .building__num {
+    font-family: var(--font-sans);
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--ls-eyebrow);
+    color: var(--dark-eyebrow);
+    font-weight: 500;
+  }
+
+  .building__name {
+    font-family: var(--font-display);
+    font-weight: 400;
+    color: var(--fg-on-dark-1);
+    font-size: clamp(22px, 2vw, 30px);
+    letter-spacing: var(--ls-heading);
+  }
+
+  .building__name em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .building__desc {
+    font-family: var(--font-sans);
+    color: var(--dark-body);
+    font-size: var(--fs-body-sm);
+    line-height: 1.6;
+  }
+
+  .building__status {
+    font-family: var(--font-sans);
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+    text-align: right;
+    justify-self: end;
+  }
+
+  @media (max-width: 820px) {
+    .building__row {
+      grid-template-columns: 48px 1fr;
+      grid-template-areas:
+        'num name'
+        'num desc'
+        'num status';
+      row-gap: var(--s-2);
+    }
+    .building__num    { grid-area: num; }
+    .building__name   { grid-area: name; }
+    .building__desc   { grid-area: desc; }
+    .building__status { grid-area: status; justify-self: start; text-align: left; padding-top: var(--s-2); }
+  }
+</style>

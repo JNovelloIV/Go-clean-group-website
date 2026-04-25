@@ -1,0 +1,187 @@
+---
+/**
+ * Locate — §3 "Where we are".
+ * Map is a clearly-labeled placeholder. The full island-orientation map
+ * is TODO-DESIGN-01 in the copy doc — Mataram, Lombok Airport (LOP),
+ * Kuta, Selong Belanak, Lembar Harbor, Bangsal Harbor as secondary pins,
+ * The Hill in gold as the primary. We render a stylized stand-in here
+ * so the section's two-column layout is correct without faking the map.
+ *
+ * Body color uses --dark-body (#A8C090) which clears WCAG AA on the
+ * Deep Forest background — fixes the contrast bug the previous Claude
+ * Design build had on this section.
+ *
+ * VERIFY BEFORE LAUNCH: the body paragraph references "foothills of
+ * Pergasingan" — Pergasingan is in east Lombok (Sembalun), not Central.
+ * Possible Claude Design fabrication. User to confirm correct local
+ * mountain reference. Marker in copy left as-is for now.
+ */
+---
+
+<section id="locate" class="section locate" aria-labelledby="locate-headline">
+  <div class="container locate__inner">
+    <div class="locate__map" aria-hidden="true">
+      <!-- Map placeholder — TODO-DESIGN-01.
+           Replace with full island map per the copy doc's design handoff. -->
+      <svg viewBox="0 0 600 720" role="img" aria-label="Map of Lombok with The Hill marked in Darek, Central Lombok">
+        <defs>
+          <pattern id="dots" width="6" height="6" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="0.6" fill="rgba(200,160,80,0.18)"/>
+          </pattern>
+        </defs>
+
+        <!-- Dotted island silhouette (stylized stand-in) -->
+        <path
+          d="M120,200 C180,140 280,120 360,140 C460,160 520,220 540,300 C560,380 540,470 480,540 C420,610 320,640 240,610 C160,580 100,520 80,440 C60,360 80,260 120,200 Z"
+          fill="url(#dots)"
+          stroke="rgba(200,160,80,0.30)"
+          stroke-width="1.25"
+          stroke-dasharray="2 4"
+        />
+
+        <!-- Compass -->
+        <g transform="translate(488,148)" fill="var(--dark-caption)">
+          <circle cx="0" cy="0" r="14" fill="none" stroke="currentColor" stroke-width="0.8"/>
+          <path d="M0,-10 L3,0 L0,10 L-3,0 Z" fill="currentColor"/>
+          <text x="0" y="-20" text-anchor="middle" font-family="DM Sans" font-size="10" letter-spacing="2" fill="currentColor">N</text>
+        </g>
+
+        <!-- Mataram (secondary, sage) -->
+        <g transform="translate(190,260)">
+          <circle r="4.5" fill="var(--sage)"/>
+          <text x="14" y="4" font-family="DM Sans" font-size="13" letter-spacing="1" fill="var(--dark-body)">Mataram</text>
+        </g>
+
+        <!-- The Hill / Darek (primary, gold, larger) -->
+        <g transform="translate(310,400)">
+          <circle r="6" fill="var(--accent)"/>
+          <circle r="11" fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.4"/>
+          <text x="16" y="-4" font-family="Cormorant Garamond" font-style="italic" font-size="20" fill="var(--accent)">The Hill</text>
+          <text x="16" y="14" font-family="DM Sans" font-size="12" letter-spacing="2" fill="var(--dark-caption)">DAREK</text>
+        </g>
+
+        <!-- Kuta (secondary, sage) -->
+        <g transform="translate(280,520)">
+          <circle r="4.5" fill="var(--sage)"/>
+          <text x="14" y="4" font-family="DM Sans" font-size="13" letter-spacing="1" fill="var(--dark-body)">Kuta</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="locate__text">
+      <p class="eyebrow">Where we are</p>
+
+      <h2 id="locate-headline" class="locate__headline">
+        A hill. Rice in every direction. <em>A lake, mountains beyond.</em>
+      </h2>
+
+      <div class="locate__body">
+        <p>
+          Darek is a village forty minutes inland from Kuta, past the surf towns and up into the foothills of Pergasingan. The land here is volcanic loam — black, clay-heavy, generous once you work with it.
+        </p>
+        <p>
+          You won't find us on a beach bar map. We think that's a feature.
+        </p>
+      </div>
+
+      <dl class="locate__meta" aria-label="Distances from The Hill">
+        <div class="locate__meta-item">
+          <dt>Airport</dt>
+          <dd>10 km</dd>
+        </div>
+        <div class="locate__meta-item">
+          <dt>Kuta</dt>
+          <dd>25 km</dd>
+        </div>
+        <div class="locate__meta-item">
+          <dt>Selong Belanak</dt>
+          <dd>20 km</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  .locate {
+    background: var(--bg-dark);
+  }
+
+  .locate__inner {
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) minmax(0, 1.2fr);
+    gap: clamp(40px, 6vw, 96px);
+    align-items: center;
+  }
+
+  .locate__map svg {
+    width: 100%;
+    height: auto;
+    max-height: 560px;
+  }
+
+  .locate__text {
+    display: grid;
+    gap: var(--s-8);
+  }
+
+  .locate__headline {
+    font-size: clamp(32px, 4.4vw, 56px);
+    color: var(--fg-on-dark-1);
+    max-width: 18ch;
+  }
+
+  .locate__body {
+    display: grid;
+    gap: var(--s-5);
+    color: var(--dark-body);
+    font-size: var(--fs-body-sm);
+    max-width: 58ch;
+  }
+
+  .locate__body p {
+    line-height: var(--lh-body);
+  }
+
+  .locate__meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-6);
+    padding-top: var(--s-6);
+    border-top: var(--border-hairline-dark);
+    margin: 0;
+  }
+
+  .locate__meta-item {
+    display: grid;
+    gap: var(--s-1);
+  }
+
+  .locate__meta dt {
+    font-family: var(--font-sans);
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--dark-eyebrow);
+    font-weight: 500;
+  }
+
+  .locate__meta dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(20px, 1.8vw, 28px);
+    color: var(--fg-on-dark-1);
+  }
+
+  @media (max-width: 900px) {
+    .locate__inner {
+      grid-template-columns: 1fr;
+    }
+    .locate__map {
+      order: -1;
+      max-width: 380px;
+      margin-inline: auto;
+    }
+  }
+</style>

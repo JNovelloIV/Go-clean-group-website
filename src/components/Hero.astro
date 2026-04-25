@@ -1,0 +1,161 @@
+---
+/**
+ * Hero — §1 of the copy doc.
+ * Italic gold emphasis on "disconnected" and "our answer" (<em> tags).
+ * Meta row third column ("Slowly, slowly, then all at once") is italic
+ * gold and weighted ~50% of row width per brief. Meta row must stay
+ * above the fold on 1366x768 — use viewport-relative sizing.
+ */
+---
+
+<section id="top" class="hero" aria-labelledby="hero-headline">
+  <div class="hero__inner">
+    <p class="eyebrow hero__eyebrow">A place being built, with intention</p>
+
+    <h1 id="hero-headline" class="hero__headline">
+      <span>In a world that feels</span>
+      <span>increasingly <em>disconnected</em>…</span>
+      <span>… The Hill is <em>our answer</em> to that.</span>
+    </h1>
+
+    <dl class="hero__meta" aria-label="Location, year, and opening">
+      <div class="hero__meta-item">
+        <dt>Where</dt>
+        <dd>Darek · Central Lombok</dd>
+      </div>
+      <div class="hero__meta-item">
+        <dt>Since</dt>
+        <dd>Mid-2024</dd>
+      </div>
+      <div class="hero__meta-item hero__meta-item--wide">
+        <dt>Opening</dt>
+        <dd><em>Slowly, slowly, then all at once</em></dd>
+      </div>
+    </dl>
+
+    <a class="hero__scroll" href="#manifesto" aria-label="Scroll to next section">
+      <span>There's more</span>
+      <svg class="hero__scroll-arrow" viewBox="0 0 20 28" aria-hidden="true">
+        <path d="M10 2 v22 M3 17 l7 7 l7-7" stroke="currentColor" stroke-width="1.25" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+</section>
+
+<style>
+  .hero {
+    min-height: calc(100svh - 64px);
+    display: grid;
+    align-items: center;
+    padding-block: clamp(64px, 9vh, 112px);
+    padding-inline: var(--frame-inset);
+    background: var(--bg-dark);
+    position: relative;
+  }
+
+  .hero__inner {
+    width: 100%;
+    max-width: var(--frame-max-w);
+    margin-inline: auto;
+    display: grid;
+    gap: clamp(28px, 4vh, 56px);
+  }
+
+  .hero__eyebrow {
+    margin: 0;
+  }
+
+  .hero__headline {
+    font-family: var(--font-display);
+    font-weight: 300;
+    color: var(--fg-on-dark-1);
+    font-size: clamp(40px, 6.4vw, 104px);
+    line-height: var(--lh-display);
+    letter-spacing: var(--ls-display);
+    display: grid;
+    gap: clamp(4px, 0.4vw, 10px);
+  }
+
+  .hero__headline span {
+    display: block;
+  }
+
+  .hero__headline em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+
+  .hero__meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+    gap: var(--s-8);
+    padding-top: var(--s-8);
+    border-top: var(--border-hairline-dark);
+    margin: 0;
+  }
+
+  .hero__meta-item {
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  .hero__meta dt {
+    font-family: var(--font-sans);
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--dark-eyebrow);
+    font-weight: 500;
+  }
+
+  .hero__meta dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(18px, 1.6vw, 26px);
+    color: var(--fg-on-dark-1);
+    letter-spacing: var(--ls-heading);
+  }
+
+  .hero__meta-item--wide dd em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  .hero__scroll {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-3);
+    color: var(--dark-caption);
+    font-family: var(--font-sans);
+    font-size: var(--fs-caption);
+    letter-spacing: var(--ls-caption);
+    justify-self: start;
+    transition: color 0.25s ease;
+  }
+
+  .hero__scroll:hover,
+  .hero__scroll:focus-visible {
+    color: var(--accent);
+  }
+
+  .hero__scroll-arrow {
+    width: 14px;
+    height: 20px;
+    animation: hero-arrow 2.4s ease-in-out infinite;
+  }
+
+  @keyframes hero-arrow {
+    0%, 100% { transform: translateY(0); opacity: 0.8; }
+    50%      { transform: translateY(4px); opacity: 1; }
+  }
+
+  @media (max-width: 720px) {
+    .hero__meta {
+      grid-template-columns: 1fr;
+      gap: var(--s-6);
+    }
+  }
+</style>

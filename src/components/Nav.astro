@@ -22,7 +22,7 @@ const items = [
 <nav class="nav" aria-label="Primary">
   <div class="nav__inner">
     <a class="nav__mark" href="#top" aria-label="The Hill — home">
-      <span class="nav__mark-text">The Hill</span>
+      <span class="nav__mark-the">The</span> <span class="nav__mark-hill">Hill</span>
     </a>
 
     <ul class="nav__links" role="list">
@@ -117,12 +117,29 @@ const items = [
     padding: var(--s-4) var(--frame-inset);
   }
 
-  .nav__mark-text {
+  .nav__mark {
     font-family: var(--font-display);
-    font-weight: 500;
-    font-size: 22px;
-    letter-spacing: var(--ls-heading);
-    color: var(--fg-on-dark-1);
+    font-weight: 400;
+    font-size: 1.5rem;
+    line-height: 1;
+    letter-spacing: 0.015em;
+    white-space: nowrap;
+  }
+
+  .nav__mark-the {
+    font-style: italic;
+    color: var(--harvest-gold);
+  }
+
+  .nav__mark-hill {
+    font-style: normal;
+    color: var(--dark-body);
+  }
+
+  @media (max-width: 720px) {
+    .nav__mark {
+      font-size: 1.35rem;
+    }
   }
 
   .nav__links {

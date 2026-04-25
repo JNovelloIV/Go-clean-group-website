@@ -64,9 +64,9 @@ const isAvailable = (src: string) => existsSync(`${publicDir}${src}`);
                   role={img.decorative ? 'presentation' : 'img'}
                   aria-hidden={img.decorative ? 'true' : undefined}
                   aria-label={img.decorative ? undefined : img.alt}
+                  data-expected-src={img.src}
                 >
                   <span class="gallery__placeholder-mark">No.&nbsp;{num}</span>
-                  <span class="gallery__placeholder-path">{img.src}</span>
                 </div>
               )}
               <figcaption class="gallery__caption-line">{img.caption}</figcaption>
@@ -165,17 +165,6 @@ const isAvailable = (src: string) => existsSync(`${publicDir}${src}`);
     font-style: italic;
     font-size: clamp(28px, 3vw, 42px);
     color: var(--gold-35);
-  }
-
-  .gallery__placeholder-path {
-    display: block;
-    margin-top: var(--s-2);
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--dark-caption);
-    letter-spacing: 0;
-    word-break: break-all;
-    opacity: 0.65;
   }
 
   .gallery__caption-line {

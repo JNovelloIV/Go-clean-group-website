@@ -413,21 +413,14 @@ const COUNTRY_CODES = [
     background: var(--bg-dark);
   }
 
-  /* The card — two-column, rounded, gold-bordered.
-     NOTE: design HTML uses grid-template-columns: 1fr 1fr, which at
-     desktop renders chips 2-per-row. The brief explicitly asks for
-     1-per-row chip wrap, with the widest chip as the column-width
-     constraint. Tightening the right track to 340px does that:
-     the longest chip ('Weekly produce, when it's available' ≈ 268px)
-     fits with breathing room, but two of any chip + 12px gap
-     overflow → wrap kicks in at one chip per row. */
+  /* The card — two-column, rounded, gold-bordered. */
   .subscribe {
     background: var(--forest-tint);
     border: 1px solid var(--gold-28);
     border-radius: 20px;
     padding: 80px 96px;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 340px;
+    grid-template-columns: 1fr 1fr;
     gap: 80px;
     align-items: center;
   }

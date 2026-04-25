@@ -47,15 +47,24 @@ const items = [
       </button>
     </div>
   </div>
-
-  <div class="nav__drawer" id="nav-drawer" data-nav-drawer hidden>
-    <ul class="nav__drawer-list" role="list">
-      {items.map((item) => (
-        <li><a class="nav__drawer-link" href={item.href} data-nav-drawer-link>{item.label}</a></li>
-      ))}
-    </ul>
-  </div>
 </nav>
+
+<!--
+  Drawer must be a SIBLING of <nav>, not a child. The nav has
+  backdrop-filter, which (per CSS spec) creates an implicit
+  containing block for any position:fixed descendants — that
+  would scope the drawer to the nav's bounds instead of the
+  viewport, and the drawer's full-screen overlay would collapse
+  to a tiny strip behind the nav. Hoisting the drawer out
+  fixes that.
+-->
+<div class="nav__drawer" id="nav-drawer" data-nav-drawer hidden>
+  <ul class="nav__drawer-list" role="list">
+    {items.map((item) => (
+      <li><a class="nav__drawer-link" href={item.href} data-nav-drawer-link>{item.label}</a></li>
+    ))}
+  </ul>
+</div>
 
 <script>
   const burger = document.querySelector<HTMLButtonElement>('[data-nav-burger]');

@@ -17,6 +17,24 @@ html {
   /* Ensure anchor jumps land below the sticky nav, not under it. */
   scroll-padding-top: 80px;
   scroll-behavior: smooth;
+
+  /* Proximity snap: when the user stops scrolling near a section
+     boundary, the page glides to the nearest section. Mid-section
+     scrolling is untouched — long sections (manifesto, production,
+     building) stay fully readable. */
+  scroll-snap-type: y proximity;
+}
+
+.hero,
+.manifesto,
+.locate,
+.production,
+.building,
+.gallery,
+.big-quote,
+.subscribe-sec {
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
 }
 
 /* Make sure [hidden] always wins over author display rules. */
@@ -168,6 +186,9 @@ em {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  html {
+    scroll-snap-type: none;
   }
 }
 

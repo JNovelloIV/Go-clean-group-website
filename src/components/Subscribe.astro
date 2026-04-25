@@ -170,6 +170,12 @@ const COUNTRY_CODES = [
       </p>
     </form>
 
+    <div class="subscribe__success" data-subscribe-success hidden role="status" aria-live="polite">
+      <p class="subscribe__success-line">
+        We've got you. We'll write or message when there's room.
+      </p>
+    </div>
+
     <div class="subscribe__instagram">
       <a href="https://instagram.com/thehill_lombok" class="subscribe__ig-cta" rel="me noopener" target="_blank">
         Follow on Instagram
@@ -181,18 +187,26 @@ const COUNTRY_CODES = [
 
 <script>
   // Subscribe form behaviour ----------------------------------------
-  const form         = document.querySelector<HTMLFormElement>('[data-subscribe-form]');
-  const emailWrap    = document.querySelector<HTMLElement>('[data-contact-email]');
-  const phoneWrap    = document.querySelector<HTMLElement>('[data-contact-whatsapp]');
-  const submitBtn    = form?.querySelector<HTMLButtonElement>('.subscribe__submit');
-  const statusEl     = form?.querySelector<HTMLElement>('[data-status]');
+  // Submits to Formspark (https://documentation.formspark.io/examples/ajax.html).
+  // Endpoint pattern: POST https://submit-form.com/{FORMSPARK_FORM_ID}
+  // Body: JSON.stringify(payload), Content-Type + Accept: application/json
+  // CORS is allowed for direct browser submissions; 200 on success.
 
-  // Tally form ID — REPLACE with your form's ID once created.
-  // The submission payload shape is fixed by the brief; the endpoint
-  // and Tally field-key mapping are the only things that swap in.
-  const TALLY_FORM_ID = 'TALLY_FORM_ID_PLACEHOLDER';
+  const form        = document.querySelector<HTMLFormElement>('[data-subscribe-form]');
+  const emailWrap   = document.querySelector<HTMLElement>('[data-contact-email]');
+  const phoneWrap   = document.querySelector<HTMLElement>('[data-contact-whatsapp]');
+  const submitBtn   = form?.querySelector<HTMLButtonElement>('.subscribe__submit');
+  const statusEl    = form?.querySelector<HTMLElement>('[data-status]');
+  const successEl   = document.querySelector<HTMLElement>('[data-subscribe-success]');
 
-  if (form && emailWrap && phoneWrap && submitBtn && statusEl) {
+  // Formspark form ID — REPLACE with the real ID before deploy.
+  // Find it in your Formspark dashboard (Submit URL ends in /{FORM_ID}).
+  const FORMSPARK_FORM_ID = 'FORMSPARK_FORM_ID_PLACEHOLDER';
+  const FORMSPARK_ENDPOINT = `https://submit-form.com/${FORMSPARK_FORM_ID}`;
+
+  const ERROR_MESSAGE = "Something didn't go through. Try again?";
+
+  if (form && emailWrap && phoneWrap && submitBtn && statusEl && successEl) {
     const channelInputs = form.querySelectorAll<HTMLInputElement>('input[name="channel"]');
     const emailInput    = form.querySelector<HTMLInputElement>('#contact-email');
     const phoneInput    = form.querySelector<HTMLInputElement>('#contact-phone');
@@ -216,7 +230,6 @@ const COUNTRY_CODES = [
     const setChannel = (ch: 'email' | 'whatsapp') => {
       emailWrap.toggleAttribute('hidden', ch !== 'email');
       phoneWrap.toggleAttribute('hidden', ch !== 'whatsapp');
-      // Keep the appropriate field focused for keyboard users
       updateGate();
     };
 
@@ -229,12 +242,13 @@ const COUNTRY_CODES = [
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+
       const ch = currentChannel();
       const contact = ch === 'email'
         ? (emailInput?.value.trim() ?? '')
         : `${(form.querySelector<HTMLSelectElement>('#contact-cc')?.value ?? '+62')}${(phoneInput?.value.trim() ?? '')}`;
 
-      const i_am = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="i_am"]:checked')).map((c) => c.value);
+      const i_am     = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="i_am"]:checked')).map((c) => c.value);
       const drawn_to = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="drawn_to"]:checked')).map((c) => c.value);
 
       const payload = {
@@ -247,18 +261,37 @@ const COUNTRY_CODES = [
 
       submitBtn.disabled = true;
       statusEl.textContent = '';
+      delete statusEl.dataset.tone;
 
-      // Stubbed for milestone 2. Real Tally endpoint wired in milestone 3.
-      console.info('[Subscribe] Payload prepared:', payload);
-      console.info('[Subscribe] Target form ID (placeholder):', TALLY_FORM_ID);
+      try {
+        const res = await fetch(FORMSPARK_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept':       'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
 
-      // Brief network shape so the success state is visible during preview.
-      await new Promise((r) => setTimeout(r, 350));
+        if (!res.ok) {
+          throw new Error(`Formspark responded ${res.status}`);
+        }
 
-      statusEl.textContent = "Thank you. We'll be in touch when there's something worth saying.";
-      statusEl.dataset.tone = 'ok';
-      form.reset();
-      setChannel('email');
+        // Success — hide the form, reveal the confirmation block, keep
+        // the Instagram CTA visible below it. Move focus to the
+        // confirmation so screen readers announce it.
+        form.hidden = true;
+        successEl.hidden = false;
+        successEl.setAttribute('tabindex', '-1');
+        successEl.focus({ preventScroll: true });
+      } catch (err) {
+        console.error('[Subscribe] submission failed:', err);
+        statusEl.textContent = ERROR_MESSAGE;
+        statusEl.dataset.tone = 'error';
+        // Re-enable the button so the user can retry. Re-validate first
+        // so it stays disabled if they cleared the field meanwhile.
+        updateGate();
+      }
     });
 
     setChannel('email');
@@ -491,6 +524,31 @@ const COUNTRY_CODES = [
     color: var(--accent);
     font-size: clamp(18px, 1.6vw, 22px);
     min-height: 1.5em;
+  }
+
+  /* Inline error tone — restrained, sage rather than red. WCAG-AA on
+     the Deep Forest section bg (--dark-body 7.02:1). */
+  .subscribe__status[data-tone="error"] {
+    color: var(--dark-body);
+  }
+
+  /* Post-submit success block — replaces the form, keeps IG visible. */
+  .subscribe__success {
+    padding-top: var(--s-4);
+  }
+
+  .subscribe__success-line {
+    font-family: var(--font-display);
+    font-weight: 300;
+    color: var(--fg-on-dark-1);
+    font-size: clamp(22px, 2.2vw, 32px);
+    line-height: 1.4;
+    letter-spacing: var(--ls-heading);
+    max-width: 30ch;
+  }
+
+  .subscribe__success:focus {
+    outline: none;
   }
 
   .subscribe__fineprint {

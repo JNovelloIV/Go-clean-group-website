@@ -1,0 +1,120 @@
+---
+/**
+ * Footer — §10.
+ * Wordmark, tagline, links, meta line. Letters link is intentionally
+ * absent — user's decision to hide the section entirely for v1.
+ */
+---
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <p class="footer__mark">The Hill</p>
+      <p class="footer__tagline">
+        A place being built, with intention.<br/>
+        Darek · Central Lombok · Since mid-2024
+      </p>
+    </div>
+
+    <ul class="footer__links" role="list">
+      <li><a href="mailto:hello@thehill.id">hello@thehill.id</a></li>
+      <li><a href="https://instagram.com/thehill_lombok" rel="me noopener" target="_blank">Instagram</a></li>
+    </ul>
+
+    <div class="footer__meta">
+      <p>© The Hill</p>
+      <p>Opening in small pieces. The list hears first.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--forest-deep);
+    border-top: var(--border-hairline-dark);
+    padding: var(--s-16) var(--frame-inset) var(--s-12);
+  }
+
+  .footer__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'brand links'
+      'meta  meta';
+    gap: var(--s-10);
+    align-items: start;
+  }
+
+  .footer__brand {
+    grid-area: brand;
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .footer__mark {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(28px, 3vw, 40px);
+    color: var(--fg-on-dark-1);
+    letter-spacing: var(--ls-heading);
+  }
+
+  .footer__tagline {
+    font-family: var(--font-sans);
+    font-size: var(--fs-body-sm);
+    color: var(--dark-body);
+    line-height: 1.6;
+  }
+
+  .footer__links {
+    grid-area: links;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-6);
+    align-items: baseline;
+  }
+
+  .footer__links a {
+    font-family: var(--font-sans);
+    font-size: var(--fs-body-sm);
+    color: var(--dark-body);
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .footer__links a:hover,
+  .footer__links a:focus-visible {
+    color: var(--accent);
+    border-color: var(--gold-35);
+  }
+
+  .footer__meta {
+    grid-area: meta;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--s-6);
+    flex-wrap: wrap;
+    padding-top: var(--s-8);
+    border-top: var(--border-hairline-dark);
+  }
+
+  .footer__meta p {
+    font-family: var(--font-sans);
+    font-size: var(--fs-caption);
+    color: var(--dark-caption);
+    letter-spacing: var(--ls-caption);
+  }
+
+  @media (max-width: 720px) {
+    .footer__inner {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'brand'
+        'links'
+        'meta';
+    }
+  }
+</style>

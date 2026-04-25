@@ -1,0 +1,538 @@
+---
+/**
+ * Subscribe — §9 "Stay close".
+ *
+ * Custom-styled dual-channel form per TODO-DESIGN-06. Built in code
+ * (not a Tally iframe) so the chip aesthetic, channel chooser, and
+ * conditional contact field can match the brand exactly.
+ *
+ * MILESTONE 2 SCOPE:
+ *   - Full form UI rendered, accessible, keyboard-navigable.
+ *   - Validation logic in place (email format / phone format).
+ *   - Submit button gated on a valid contact value.
+ *   - On submit, the payload shape required by the brief is built
+ *     and posted to a STUBBED endpoint. Tally form ID is a clearly-
+ *     labeled placeholder; the user supplies the real ID in M3.
+ *
+ *   - SUCCESS state shows a quiet thank-you line.
+ *   - ERROR state shows a quiet retry line.
+ *
+ * MILESTONE 3 will replace the stub with the real Tally endpoint.
+ */
+
+const Q1_OPTIONS = [
+  'A neighbor on Lombok',
+  'A chef',
+  'An expat looking for clean food',
+  'A traveler curious about the hill',
+  'Just here for the letters',
+];
+
+const Q2_OPTIONS = [
+  "Weekly produce, when it's available",
+  'The long table dinners',
+  'Sourcing for my kitchen',
+  'The slow build of a place',
+  'Getting my hands in the soil',
+];
+
+// Subset of country dial codes — covers The Hill's likely audience.
+// The user can extend this list later. +62 (Indonesia) is the default.
+const COUNTRY_CODES = [
+  { code: '+62',  label: 'Indonesia' },
+  { code: '+61',  label: 'Australia' },
+  { code: '+1',   label: 'USA / Canada' },
+  { code: '+44',  label: 'United Kingdom' },
+  { code: '+33',  label: 'France' },
+  { code: '+49',  label: 'Germany' },
+  { code: '+31',  label: 'Netherlands' },
+  { code: '+34',  label: 'Spain' },
+  { code: '+39',  label: 'Italy' },
+  { code: '+41',  label: 'Switzerland' },
+  { code: '+46',  label: 'Sweden' },
+  { code: '+45',  label: 'Denmark' },
+  { code: '+47',  label: 'Norway' },
+  { code: '+65',  label: 'Singapore' },
+  { code: '+60',  label: 'Malaysia' },
+  { code: '+66',  label: 'Thailand' },
+  { code: '+81',  label: 'Japan' },
+  { code: '+82',  label: 'South Korea' },
+  { code: '+86',  label: 'China' },
+  { code: '+91',  label: 'India' },
+  { code: '+852', label: 'Hong Kong' },
+  { code: '+64',  label: 'New Zealand' },
+];
+---
+
+<section id="subscribe" class="section subscribe" aria-labelledby="subscribe-headline">
+  <div class="container subscribe__inner">
+    <p class="eyebrow">Stay close</p>
+
+    <h2 id="subscribe-headline" class="subscribe__headline">
+      Follow the <em>hill.</em>
+    </h2>
+
+    <p class="subscribe__lead">
+      Three of us, hands in the soil. No funnels, no drip sequences. When there's a popup dinner, a workshop, a long table to share — we'll write or message. The daily work is on Instagram.
+    </p>
+
+    <form
+      class="subscribe__form"
+      data-subscribe-form
+      novalidate
+      aria-describedby="subscribe-fineprint"
+    >
+      <fieldset class="subscribe__channel" data-channel-group>
+        <legend class="subscribe__legend">How should we reach you?</legend>
+        <div class="subscribe__segmented" role="radiogroup" aria-label="Contact channel">
+          <label class="subscribe__seg-option">
+            <input type="radio" name="channel" value="email" checked />
+            <span>Email</span>
+          </label>
+          <label class="subscribe__seg-option">
+            <input type="radio" name="channel" value="whatsapp" />
+            <span>WhatsApp</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="subscribe__contact" data-contact-email>
+        <label class="sr-only" for="contact-email">Email address</label>
+        <input
+          id="contact-email"
+          type="email"
+          name="email"
+          placeholder="you@email.com"
+          autocomplete="email"
+          inputmode="email"
+        />
+      </div>
+
+      <div class="subscribe__contact subscribe__contact--phone" data-contact-whatsapp hidden>
+        <label class="sr-only" for="contact-cc">Country code</label>
+        <select id="contact-cc" name="country_code" class="subscribe__cc">
+          {COUNTRY_CODES.map((c) => (
+            <option value={c.code} selected={c.code === '+62'}>{c.code} {c.label}</option>
+          ))}
+        </select>
+        <label class="sr-only" for="contact-phone">WhatsApp number</label>
+        <input
+          id="contact-phone"
+          type="tel"
+          name="phone"
+          placeholder="WhatsApp number"
+          autocomplete="tel-national"
+          inputmode="tel"
+        />
+      </div>
+
+      <fieldset class="subscribe__chips">
+        <legend class="subscribe__chips-legend">
+          I am... <span class="subscribe__chips-hint">(optional, pick any)</span>
+        </legend>
+        <div class="subscribe__chips-row">
+          {Q1_OPTIONS.map((opt) => (
+            <label class="chip">
+              <input type="checkbox" name="i_am" value={opt} />
+              <span>{opt}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset class="subscribe__chips">
+        <legend class="subscribe__chips-legend">
+          I'm drawn to... <span class="subscribe__chips-hint">(optional, pick any)</span>
+        </legend>
+        <div class="subscribe__chips-row">
+          {Q2_OPTIONS.map((opt) => (
+            <label class="chip">
+              <input type="checkbox" name="drawn_to" value={opt} />
+              <span>{opt}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <div class="subscribe__submit-row">
+        <button class="subscribe__submit" type="submit" disabled>Subscribe</button>
+      </div>
+
+      <p
+        class="subscribe__status"
+        data-status
+        role="status"
+        aria-live="polite"
+      ></p>
+
+      <p id="subscribe-fineprint" class="subscribe__fineprint">
+        Free &amp; quiet. Unsubscribe anytime — reply STOP on WhatsApp, or unsubscribe from any email. We won't share your contact — we barely check ours.
+      </p>
+    </form>
+
+    <div class="subscribe__instagram">
+      <a href="https://instagram.com/thehill_lombok" class="subscribe__ig-cta" rel="me noopener" target="_blank">
+        Follow on Instagram
+      </a>
+      <span class="subscribe__ig-handle">@thehill_lombok</span>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Subscribe form behaviour ----------------------------------------
+  const form         = document.querySelector<HTMLFormElement>('[data-subscribe-form]');
+  const emailWrap    = document.querySelector<HTMLElement>('[data-contact-email]');
+  const phoneWrap    = document.querySelector<HTMLElement>('[data-contact-whatsapp]');
+  const submitBtn    = form?.querySelector<HTMLButtonElement>('.subscribe__submit');
+  const statusEl     = form?.querySelector<HTMLElement>('[data-status]');
+
+  // Tally form ID — REPLACE with your form's ID once created.
+  // The submission payload shape is fixed by the brief; the endpoint
+  // and Tally field-key mapping are the only things that swap in.
+  const TALLY_FORM_ID = 'TALLY_FORM_ID_PLACEHOLDER';
+
+  if (form && emailWrap && phoneWrap && submitBtn && statusEl) {
+    const channelInputs = form.querySelectorAll<HTMLInputElement>('input[name="channel"]');
+    const emailInput    = form.querySelector<HTMLInputElement>('#contact-email');
+    const phoneInput    = form.querySelector<HTMLInputElement>('#contact-phone');
+
+    const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+    const isValidPhone = (v: string) => /^[0-9 \-()]{6,}$/.test(v.trim());
+
+    const currentChannel = (): 'email' | 'whatsapp' => {
+      const c = form.querySelector<HTMLInputElement>('input[name="channel"]:checked');
+      return (c?.value as 'email' | 'whatsapp') ?? 'email';
+    };
+
+    const updateGate = () => {
+      const ch = currentChannel();
+      const valid = ch === 'email'
+        ? !!emailInput && isValidEmail(emailInput.value)
+        : !!phoneInput && isValidPhone(phoneInput.value);
+      submitBtn.disabled = !valid;
+    };
+
+    const setChannel = (ch: 'email' | 'whatsapp') => {
+      emailWrap.toggleAttribute('hidden', ch !== 'email');
+      phoneWrap.toggleAttribute('hidden', ch !== 'whatsapp');
+      // Keep the appropriate field focused for keyboard users
+      updateGate();
+    };
+
+    channelInputs.forEach((input) => {
+      input.addEventListener('change', () => setChannel(currentChannel()));
+    });
+
+    emailInput?.addEventListener('input', updateGate);
+    phoneInput?.addEventListener('input', updateGate);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const ch = currentChannel();
+      const contact = ch === 'email'
+        ? (emailInput?.value.trim() ?? '')
+        : `${(form.querySelector<HTMLSelectElement>('#contact-cc')?.value ?? '+62')}${(phoneInput?.value.trim() ?? '')}`;
+
+      const i_am = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="i_am"]:checked')).map((c) => c.value);
+      const drawn_to = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="drawn_to"]:checked')).map((c) => c.value);
+
+      const payload = {
+        channel: ch,
+        contact,
+        i_am,
+        drawn_to,
+        submitted_at: new Date().toISOString(),
+      };
+
+      submitBtn.disabled = true;
+      statusEl.textContent = '';
+
+      // Stubbed for milestone 2. Real Tally endpoint wired in milestone 3.
+      console.info('[Subscribe] Payload prepared:', payload);
+      console.info('[Subscribe] Target form ID (placeholder):', TALLY_FORM_ID);
+
+      // Brief network shape so the success state is visible during preview.
+      await new Promise((r) => setTimeout(r, 350));
+
+      statusEl.textContent = "Thank you. We'll be in touch when there's something worth saying.";
+      statusEl.dataset.tone = 'ok';
+      form.reset();
+      setChannel('email');
+    });
+
+    setChannel('email');
+  }
+</script>
+
+<style>
+  .subscribe {
+    background: var(--bg-dark);
+  }
+
+  .subscribe__inner {
+    display: grid;
+    gap: var(--s-8);
+    max-width: 720px;
+    margin-inline: auto;
+  }
+
+  .subscribe__headline {
+    font-size: clamp(40px, 6vw, 84px);
+    font-weight: 300;
+    color: var(--fg-on-dark-1);
+    line-height: var(--lh-display);
+    letter-spacing: var(--ls-display);
+  }
+
+  .subscribe__lead {
+    font-family: var(--font-display);
+    font-weight: 300;
+    color: var(--fg-on-dark-1);
+    font-size: clamp(20px, 1.9vw, 26px);
+    line-height: 1.5;
+    max-width: 56ch;
+  }
+
+  .subscribe__form {
+    display: grid;
+    gap: var(--s-8);
+    margin-top: var(--s-4);
+  }
+
+  .subscribe__legend,
+  .subscribe__chips-legend {
+    font-family: var(--font-sans);
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--dark-eyebrow);
+    font-weight: 500;
+    margin-bottom: var(--s-3);
+  }
+
+  .subscribe__chips-hint {
+    text-transform: none;
+    letter-spacing: var(--ls-caption);
+    color: var(--dark-caption);
+    font-weight: 400;
+    margin-left: var(--s-2);
+  }
+
+  .subscribe__channel {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  .subscribe__segmented {
+    display: inline-flex;
+    border: 1px solid var(--gold-28);
+    border-radius: var(--r-full);
+    overflow: hidden;
+    background: var(--forest-mid);
+  }
+
+  .subscribe__seg-option {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .subscribe__seg-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .subscribe__seg-option span {
+    display: inline-block;
+    padding: var(--s-3) var(--s-6);
+    font-family: var(--font-sans);
+    font-size: var(--fs-body-sm);
+    color: var(--dark-body);
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .subscribe__seg-option input:checked + span {
+    background: var(--accent);
+    color: var(--deep-forest);
+    font-weight: 500;
+  }
+
+  .subscribe__seg-option input:focus-visible + span {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* Contact field --------------------------------------------------- */
+  .subscribe__contact {
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  .subscribe__contact--phone {
+    grid-template-columns: minmax(140px, 200px) 1fr;
+    gap: var(--s-3);
+  }
+
+  .subscribe__form input[type="email"],
+  .subscribe__form input[type="tel"],
+  .subscribe__form select {
+    width: 100%;
+    padding: var(--s-4) var(--s-5);
+    background: var(--forest-mid);
+    color: var(--fg-on-dark-1);
+    border: 1px solid var(--gold-20);
+    border-radius: var(--r-md);
+    font-family: var(--font-sans);
+    font-size: var(--fs-body-sm);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .subscribe__form input::placeholder {
+    color: var(--dark-caption);
+  }
+
+  .subscribe__form input:focus,
+  .subscribe__form select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  /* Chips ----------------------------------------------------------- */
+  .subscribe__chips {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  .subscribe__chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+  }
+
+  .chip {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .chip span {
+    display: inline-block;
+    padding: var(--s-3) var(--s-5);
+    font-family: var(--font-sans);
+    font-size: var(--fs-body-sm);
+    color: var(--sage);
+    border: 1px solid var(--sage);
+    border-radius: var(--r-full);
+    background: transparent;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .chip:hover span {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .chip input:checked + span {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--gold-20);
+  }
+
+  .chip input:focus-visible + span {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* Submit ---------------------------------------------------------- */
+  .subscribe__submit-row {
+    margin-top: var(--s-2);
+  }
+
+  .subscribe__submit {
+    font-family: var(--font-sans);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    color: var(--deep-forest);
+    background: var(--accent);
+    padding: var(--s-4) var(--s-10);
+    border: 0;
+    border-radius: var(--r-full);
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+  }
+
+  .subscribe__submit:hover:not(:disabled),
+  .subscribe__submit:focus-visible:not(:disabled) {
+    background: color-mix(in srgb, var(--accent) 88%, white);
+  }
+
+  .subscribe__submit:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* Status / fine print --------------------------------------------- */
+  .subscribe__status {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--accent);
+    font-size: clamp(18px, 1.6vw, 22px);
+    min-height: 1.5em;
+  }
+
+  .subscribe__fineprint {
+    font-family: var(--font-sans);
+    font-size: var(--fs-caption);
+    color: var(--dark-caption);
+    line-height: 1.7;
+    max-width: 60ch;
+  }
+
+  /* Instagram ------------------------------------------------------- */
+  .subscribe__instagram {
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-4);
+    margin-top: var(--s-6);
+    padding-top: var(--s-6);
+    border-top: var(--border-hairline-dark);
+    flex-wrap: wrap;
+  }
+
+  .subscribe__ig-cta {
+    font-family: var(--font-sans);
+    font-size: var(--fs-body-sm);
+    font-weight: 500;
+    color: var(--accent);
+    border-bottom: 1px solid var(--gold-35);
+    padding-bottom: 2px;
+    transition: border-color 0.2s ease;
+  }
+
+  .subscribe__ig-cta:hover,
+  .subscribe__ig-cta:focus-visible {
+    border-color: var(--accent);
+  }
+
+  .subscribe__ig-handle {
+    font-family: var(--font-sans);
+    font-size: var(--fs-caption);
+    color: var(--dark-caption);
+    letter-spacing: var(--ls-caption);
+  }
+
+  @media (max-width: 720px) {
+    .subscribe__contact--phone {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

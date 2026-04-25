@@ -14,6 +14,14 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  /* Ensure anchor jumps land below the sticky nav, not under it. */
+  scroll-padding-top: 80px;
+  scroll-behavior: smooth;
+}
+
+/* Make sure [hidden] always wins over author display rules. */
+[hidden] {
+  display: none !important;
 }
 
 body {

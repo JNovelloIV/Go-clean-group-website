@@ -131,12 +131,21 @@ const COUNTRY_CODES = [
           I am... <span class="subscribe__chips-hint">(optional, pick any)</span>
         </legend>
         <div class="subscribe__chips-row">
-          {Q1_OPTIONS.map((opt) => (
-            <label class="chip">
-              <input type="checkbox" name="i_am" value={opt} />
-              <span>{opt}</span>
-            </label>
-          ))}
+          {Q1_OPTIONS.map((opt) => {
+            const isChef = opt === 'A chef';
+            return (
+              <label class="chip">
+                <input
+                  type="checkbox"
+                  name="i_am"
+                  value={opt}
+                  data-chef={isChef ? '' : null}
+                  aria-controls={isChef ? 'subscribe-chef-extras' : null}
+                />
+                <span>{opt}</span>
+              </label>
+            );
+          })}
         </div>
       </fieldset>
 
@@ -153,6 +162,38 @@ const COUNTRY_CODES = [
           ))}
         </div>
       </fieldset>
+
+      <div
+        class="subscribe__chef-extras"
+        id="subscribe-chef-extras"
+        data-chef-extras
+        role="group"
+        aria-label="Chef details, optional"
+        hidden
+      >
+        <div class="subscribe__chef-field">
+          <label class="sr-only" for="chef-name">Your name</label>
+          <input
+            id="chef-name"
+            type="text"
+            name="name"
+            placeholder="Your name"
+            autocomplete="name"
+          />
+        </div>
+        <div class="subscribe__chef-field">
+          <label class="sr-only" for="chef-kitchen">Where you cook</label>
+          <input
+            id="chef-kitchen"
+            type="text"
+            name="where_you_cook"
+            placeholder="Restaurant or kitchen, location"
+            autocomplete="organization"
+          />
+        </div>
+      </div>
+
+      <p class="sr-only" data-chef-announce aria-live="polite"></p>
 
       <div class="subscribe__submit-row">
         <button class="subscribe__submit" type="submit" disabled>Subscribe</button>
@@ -202,15 +243,66 @@ const COUNTRY_CODES = [
   const submitBtn   = form?.querySelector<HTMLButtonElement>('.subscribe__submit');
   const statusEl    = form?.querySelector<HTMLElement>('[data-status]');
   const successEl   = document.querySelector<HTMLElement>('[data-subscribe-success]');
+  const chefExtras  = form?.querySelector<HTMLElement>('[data-chef-extras]');
+  const chefAnnounce = form?.querySelector<HTMLElement>('[data-chef-announce]');
 
   const FORMSPARK_URL = 'https://submit-form.com/PQ024KE15';
 
   const ERROR_MESSAGE = "Something didn't go through. Try again?";
 
-  if (form && emailWrap && phoneWrap && submitBtn && statusEl && successEl) {
+  if (form && emailWrap && phoneWrap && submitBtn && statusEl && successEl && chefExtras && chefAnnounce) {
     const channelInputs = form.querySelectorAll<HTMLInputElement>('input[name="channel"]');
     const emailInput    = form.querySelector<HTMLInputElement>('#contact-email');
     const phoneInput    = form.querySelector<HTMLInputElement>('#contact-phone');
+    const chefCheckbox  = form.querySelector<HTMLInputElement>('input[name="i_am"][data-chef]');
+    const chefNameInput = form.querySelector<HTMLInputElement>('#chef-name');
+    const chefKitchenInput = form.querySelector<HTMLInputElement>('#chef-kitchen');
+
+    // Reveal/hide chef-only fields. Two-frame RAF before adding the
+    // .is-revealed class lets the browser apply the from-state styles
+    // first so the opacity/transform actually transition. On hide we
+    // remove the class (fade out), then after the transition completes
+    // restore `hidden` and clear values so a later re-check starts
+    // fresh — values aren't sent on submit while hidden anyway.
+    const PREFERS_REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const TRANSITION_MS = PREFERS_REDUCED ? 0 : 220;
+    let chefShown = false;
+    let chefHideTimer: number | null = null;
+
+    const setChefVisible = (show: boolean) => {
+      if (show === chefShown) return;
+      chefShown = show;
+
+      if (chefHideTimer !== null) {
+        window.clearTimeout(chefHideTimer);
+        chefHideTimer = null;
+      }
+
+      if (show) {
+        chefExtras.hidden = false;
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            if (chefShown) chefExtras.classList.add('is-revealed');
+          });
+        });
+        chefAnnounce.textContent = 'Optional chef fields revealed: your name, where you cook.';
+      } else {
+        chefExtras.classList.remove('is-revealed');
+        chefAnnounce.textContent = '';
+        chefHideTimer = window.setTimeout(() => {
+          if (!chefShown) {
+            chefExtras.hidden = true;
+            if (chefNameInput) chefNameInput.value = '';
+            if (chefKitchenInput) chefKitchenInput.value = '';
+          }
+          chefHideTimer = null;
+        }, TRANSITION_MS);
+      }
+    };
+
+    chefCheckbox?.addEventListener('change', () => {
+      setChefVisible(!!chefCheckbox.checked);
+    });
 
     const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
     const isValidPhone = (v: string) => /^[0-9 \-()]{6,}$/.test(v.trim());
@@ -252,13 +344,23 @@ const COUNTRY_CODES = [
       const i_am     = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="i_am"]:checked')).map((c) => c.value);
       const drawn_to = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="drawn_to"]:checked')).map((c) => c.value);
 
-      const payload = {
+      const payload: Record<string, unknown> = {
         channel: ch,
         contact,
         i_am,
         drawn_to,
         submitted_at: new Date().toISOString(),
       };
+
+      // Chef-only fields: included only when the chef chip is checked
+      // AND the user actually typed something. Empty strings are omitted
+      // so dashboard rows stay clean.
+      if (chefCheckbox?.checked) {
+        const nameVal    = chefNameInput?.value.trim()    ?? '';
+        const kitchenVal = chefKitchenInput?.value.trim() ?? '';
+        if (nameVal)    payload.name           = nameVal;
+        if (kitchenVal) payload.where_you_cook = kitchenVal;
+      }
 
       submitBtn.disabled = true;
       statusEl.textContent = '';
@@ -487,6 +589,47 @@ const COUNTRY_CODES = [
   .chip input:focus-visible + span {
     outline: 2px solid var(--accent);
     outline-offset: 3px;
+  }
+
+  /* Chef-only extras ------------------------------------------------ */
+  /* Hidden by default via the [hidden] attribute. When unhidden the
+     two-frame RAF in the script adds .is-revealed, which fades the
+     wrapper in from a 4px lift. Sub-200ms transition matches the
+     restraint of the rest of the form. Reduced-motion is handled
+     globally in base.css. */
+  .subscribe__chef-extras {
+    display: grid;
+    gap: var(--s-3);
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .subscribe__chef-extras.is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+
+  .subscribe__chef-extras input[type="text"] {
+    width: 100%;
+    padding: var(--s-4) var(--s-5);
+    background: var(--forest-mid);
+    color: var(--fg-on-dark-1);
+    border: 1px solid var(--gold-20);
+    border-radius: var(--r-md);
+    font-family: var(--font-sans);
+    font-size: var(--fs-body-sm);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .subscribe__chef-extras input[type="text"]::placeholder {
+    color: var(--dark-body);
+    opacity: 1;
+  }
+
+  .subscribe__chef-extras input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
   }
 
   /* Submit ---------------------------------------------------------- */

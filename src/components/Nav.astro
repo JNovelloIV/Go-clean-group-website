@@ -1,0 +1,105 @@
+---
+/**
+ * Nav — top site navigation.
+ * Items per copy doc §Global: Why · The Farm · Building · The Land
+ * Letters is intentionally omitted for v1 (user decision: hide entirely
+ * until the first real letter is written).
+ * CTA: "Follow the Hill" anchors to #subscribe.
+ */
+
+const items = [
+  { href: '#manifesto', label: 'Why' },
+  { href: '#production', label: 'The Farm' },
+  { href: '#building',   label: 'Building' },
+  { href: '#locate',     label: 'The Land' },
+];
+---
+
+<nav class="nav" aria-label="Primary">
+  <div class="nav__inner">
+    <a class="nav__mark" href="#top" aria-label="The Hill — home">
+      <span class="nav__mark-text">The Hill</span>
+    </a>
+
+    <ul class="nav__links" role="list">
+      {items.map((item) => (
+        <li><a class="nav__link" href={item.href}>{item.label}</a></li>
+      ))}
+    </ul>
+
+    <a class="nav__cta" href="#subscribe">Follow the Hill</a>
+  </div>
+</nav>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: color-mix(in srgb, var(--deep-forest) 88%, transparent);
+    backdrop-filter: saturate(140%) blur(10px);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: var(--border-hairline-dark);
+  }
+
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-6);
+    max-width: var(--frame-max-w);
+    margin-inline: auto;
+    padding: var(--s-4) var(--frame-inset);
+  }
+
+  .nav__mark-text {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: var(--ls-heading);
+    color: var(--fg-on-dark-1);
+  }
+
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: var(--s-8);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav__link {
+    font-family: var(--font-sans);
+    font-size: var(--fs-body-sm);
+    color: var(--fg-on-dark-2);
+    transition: color 0.2s ease;
+  }
+
+  .nav__link:hover,
+  .nav__link:focus-visible {
+    color: var(--accent);
+  }
+
+  .nav__cta {
+    font-family: var(--font-sans);
+    font-size: var(--fs-body-sm);
+    font-weight: 500;
+    color: var(--deep-forest);
+    background: var(--accent);
+    padding: var(--s-3) var(--s-5);
+    border-radius: var(--r-full);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .nav__cta:hover,
+  .nav__cta:focus-visible {
+    background: color-mix(in srgb, var(--accent) 88%, white);
+  }
+
+  @media (max-width: 720px) {
+    .nav__links {
+      display: none;
+    }
+  }
+</style>

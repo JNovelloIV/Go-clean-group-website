@@ -1,0 +1,177 @@
+/* =========================================================================
+   The Hill — base styles
+   Minimal reset + global typography defaults.
+   ========================================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-dark);
+  color: var(--fg-on-dark-2);
+  font-family: var(--font-sans);
+  font-size: clamp(16px, 1.15vw, 18px);
+  line-height: var(--lh-body);
+  font-weight: 400;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-heading);
+  color: var(--fg-on-dark-1);
+}
+
+p {
+  margin: 0;
+}
+
+em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 400;
+}
+
+/* Shared section primitives --------------------------------------------- */
+
+.section {
+  padding-block: var(--section-pad-y);
+  padding-inline: var(--frame-inset);
+}
+
+.section--light {
+  background: var(--bg);
+  color: var(--fg1);
+}
+
+.section--light em {
+  color: var(--accent-on-light);
+  font-weight: 500;
+}
+
+.container {
+  max-width: var(--frame-max-w);
+  margin-inline: auto;
+}
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--dark-eyebrow);
+  font-weight: 500;
+}
+
+.section--light .eyebrow {
+  color: var(--muted-gold);
+}
+
+.caption {
+  font-size: var(--fs-caption);
+  letter-spacing: var(--ls-caption);
+  color: var(--dark-caption);
+}
+
+.section--light .caption {
+  color: var(--fg2);
+}
+
+/* Screen-reader-only utility ------------------------------------------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip link ------------------------------------------------------------ */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: var(--s-4);
+  background: var(--accent);
+  color: var(--deep-forest);
+  padding: var(--s-3) var(--s-4);
+  font-size: var(--fs-body-sm);
+  font-weight: 500;
+  border-radius: var(--r-md);
+  z-index: 100;
+  transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+  top: var(--s-4);
+}
+
+/* Focus styles --------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+
+/* Reduced motion ------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Reveal-on-scroll (minimal, brand-restrained) ------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.9s ease-out, transform 0.9s ease-out;
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}

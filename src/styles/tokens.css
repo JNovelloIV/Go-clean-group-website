@@ -1,0 +1,124 @@
+/* =========================================================================
+   The Hill Lombok — design tokens
+   Extracted verbatim from the Claude Design export (Brand Deck v1.3, 2025).
+   Do not approximate — these are the locked brand values.
+   ========================================================================= */
+
+:root {
+  /* ---------- Core palette — "the five colours" ---------- */
+  --deep-forest:  #1A3214;  /* Primary surface, dark backgrounds */
+  --harvest-gold: #C8A050;  /* Accent — used sparingly, on dark only */
+  --ivory:        #F8F4EE;  /* Background on light mode */
+  --near-black:   #181C18;  /* Body text on light, deep UI surfaces */
+  --sage:         #6B7F5E;  /* Neutral — captions, metadata, rules */
+
+  /* ---------- Extended / derived tones ---------- */
+  --forest-tint:    #2e4a26;
+  --forest-deep:    #0d1a08;
+  --forest-mid:     #2a4224;
+  --dark-body:      #A8C090;
+  --dark-eyebrow:   #4A6830;
+  --dark-caption:   #7a8e6d;
+  --muted-gold:     #8a6f38;
+  --ivory-warm:     #efe8db;
+  --ivory-deep:     #e8dfc9;
+  --error-red:      #b83a2e;
+
+  /* ---------- Alpha overlays ---------- */
+  --ink-08:   rgba(24,28,24,0.08);
+  --ink-12:   rgba(24,28,24,0.12);
+  --ink-15:   rgba(24,28,24,0.15);
+  --gold-20:  rgba(200,160,80,0.20);
+  --gold-28:  rgba(200,160,80,0.28);
+  --gold-35:  rgba(200,160,80,0.35);
+  --cream-06: rgba(248,244,238,0.06);
+  --cream-55: rgba(248,244,238,0.55);
+  --cream-85: rgba(248,244,238,0.85);
+
+  /* ---------- Semantic tokens ---------- */
+  --bg:              var(--ivory);
+  --bg-alt:          var(--ivory-warm);
+  --bg-dark:         var(--deep-forest);
+  --fg1:             var(--near-black);
+  --fg2:             var(--sage);
+  --fg-on-dark-1:    #ffffff;
+  --fg-on-dark-2:    var(--dark-body);
+  --accent:          var(--harvest-gold);
+  --accent-on-light: var(--deep-forest);
+  --rule:            var(--ink-12);
+  --rule-dark:       var(--gold-20);
+
+  /* ---------- Typography families ---------- */
+  --font-display: 'Cormorant Garamond', 'EB Garamond', Garamond, serif;
+  --font-sans:    'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono:    ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* ---------- Type scale (brand-deck scale at 1920 wide) ---------- */
+  --fs-hero:     104px;
+  --fs-display:   84px;
+  --fs-h1:        72px;
+  --fs-h2:        56px;
+  --fs-h3:        42px;
+  --fs-h4:        32px;
+  --fs-body-lg:   26px;
+  --fs-body:      22px;
+  --fs-body-sm:   18px;
+  --fs-caption:   16px;
+  --fs-eyebrow:   14px;
+  --fs-micro:     12px;
+
+  /* ---------- Line heights ---------- */
+  --lh-display: 1.04;
+  --lh-heading: 1.1;
+  --lh-body:    1.75;
+  --lh-quote:   1.35;
+
+  /* ---------- Letter spacing ---------- */
+  --ls-display: -0.015em;
+  --ls-heading: -0.005em;
+  --ls-body:     0;
+  --ls-eyebrow:  0.24em;
+  --ls-caption:  0.16em;
+
+  /* ---------- Spacing (8pt rhythm) ---------- */
+  --s-1:   4px;
+  --s-2:   8px;
+  --s-3:  12px;
+  --s-4:  16px;
+  --s-5:  20px;
+  --s-6:  24px;
+  --s-8:  32px;
+  --s-10: 40px;
+  --s-12: 48px;
+  --s-16: 64px;
+  --s-20: 80px;
+  --s-24: 100px;
+  --s-32: 128px;
+
+  /* ---------- Radii ---------- */
+  --r-sm:   4px;
+  --r-md:   8px;
+  --r-lg:  12px;
+  --r-xl:  20px;
+  --r-full: 999px;
+
+  /* ---------- Borders ---------- */
+  --border-hairline:      1px solid var(--ink-12);
+  --border-hairline-dark: 1px solid var(--gold-20);
+
+  /* ---------- Shadows ---------- */
+  --shadow-none: none;
+  --shadow-soft: 0 1px 2px rgba(24,28,24,0.06), 0 4px 16px rgba(24,28,24,0.04);
+
+  /* ---------- Layout ---------- */
+  --frame-inset:   var(--s-24);
+  --frame-max-w:   1440px;
+  --section-pad-y: clamp(72px, 10vw, 140px);
+}
+
+@media (max-width: 900px) {
+  :root {
+    --frame-inset:   var(--s-8);
+    --section-pad-y: clamp(56px, 14vw, 96px);
+  }
+}

@@ -12,14 +12,20 @@
   --near-black:   #181C18;  /* Body text on light, deep UI surfaces */
   --sage:         #6B7F5E;  /* Neutral — captions, metadata, rules */
 
-  /* ---------- Extended / derived tones ---------- */
+  /* ---------- Extended / derived tones ----------
+     Note: dark-eyebrow, dark-caption, and sage-deep have been nudged
+     upward in luminance vs. the original brand-deck values so that
+     all dark-bg body/eyebrow/caption usages clear WCAG 2.1 AA.
+     The five core colours (deep-forest, harvest-gold, ivory,
+     near-black, sage) are unchanged. Ratios noted per token. */
   --forest-tint:    #2e4a26;
   --forest-deep:    #0d1a08;
   --forest-mid:     #2a4224;
-  --dark-body:      #A8C090;
-  --dark-eyebrow:   #4A6830;
-  --dark-caption:   #7a8e6d;
-  --muted-gold:     #8a6f38;
+  --dark-body:      #A8C090;  /* 7.02:1 on deep-forest — body */
+  --dark-eyebrow:   #80A060;  /* 4.71:1 on deep-forest — eyebrows (was #4A6830 / 2.19:1) */
+  --dark-caption:   #8A9E7C;  /* 4.81:1 on deep-forest — captions/fineprint (was #7a8e6d / 3.92:1) */
+  --sage-deep:      #5E7150;  /* 4.85:1 on ivory       — closing italic line on light bg */
+  --muted-gold:     #8a6f38;  /* 4.34:1 on ivory       — large-text eyebrow on light, OK at >=18pt */
   --ivory-warm:     #efe8db;
   --ivory-deep:     #e8dfc9;
   --error-red:      #b83a2e;

@@ -390,7 +390,9 @@ const COUNTRY_CODES = [
   }
 
   .subscribe__form input::placeholder {
-    color: var(--dark-caption);
+    /* 5.57:1 on forest-mid input bg — passes WCAG AA. */
+    color: var(--dark-body);
+    opacity: 1;
   }
 
   .subscribe__form input:focus,
@@ -428,7 +430,9 @@ const COUNTRY_CODES = [
     padding: var(--s-3) var(--s-5);
     font-family: var(--font-sans);
     font-size: var(--fs-body-sm);
-    color: var(--sage);
+    /* Text uses the AA-passing dark-caption; border keeps the
+       quieter sage tone (3.31:1 on deep-forest passes WCAG UI 3:1). */
+    color: var(--dark-caption);
     border: 1px solid var(--sage);
     border-radius: var(--r-full);
     background: transparent;

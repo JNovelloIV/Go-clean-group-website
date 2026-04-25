@@ -38,38 +38,40 @@
 
   .manifesto__inner {
     display: grid;
-    grid-template-columns: minmax(140px, 1fr) minmax(0, 4fr);
-    gap: clamp(24px, 6vw, 96px);
+    grid-template-columns: 2fr 10fr;
+    gap: 64px;
     align-items: start;
   }
 
   .manifesto__eyebrow {
     margin: 0;
     padding-top: 12px;
+    position: sticky;
+    top: 140px;
   }
 
   .manifesto__body {
     display: grid;
-    gap: var(--s-10);
-    max-width: 38ch;
+    gap: 22px;
   }
 
   .manifesto__p {
     font-family: var(--font-display);
-    font-weight: 300;
+    font-weight: 400;
     color: var(--fg-on-dark-1);
-    font-size: clamp(22px, 2.4vw, 36px);
-    line-height: 1.4;
-    letter-spacing: var(--ls-heading);
+    font-size: clamp(24px, 2.1vw, 34px);
+    line-height: 1.42;
+    letter-spacing: -0.005em;
   }
 
-  @media (max-width: 720px) {
+  @media (max-width: 900px) {
     .manifesto__inner {
       grid-template-columns: 1fr;
-      gap: var(--s-8);
+      gap: 48px;
     }
     .manifesto__eyebrow {
       padding-top: 0;
+      position: static;
     }
   }
 </style>

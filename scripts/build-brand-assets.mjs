@@ -7,9 +7,13 @@
 //
 // Inputs:  public/images/mark-gold-no-roots.png (favicons)
 //          public/images/mark-gold.png          (OG image)
+//          public/images/horizontal-dark.png    (lockup, dark-fill bg)
 //          public/fonts/cormorant-garamond.woff2 (OG tagline)
 // Outputs: public/{favicon-16.png,favicon-32.png,favicon.ico,
 //                  apple-touch-icon.png,og-image.png}
+//          public/images/horizontal-dark-transparent.png
+//            (chromakeyed version: dark-forest fill removed for use on
+//             non-dark surfaces, e.g. the nav over a cream section)
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import sharp from 'sharp';
@@ -136,6 +140,63 @@ async function buildOg() {
   console.log(`✓ og-image.png (${W}x${H}, mark ${markTargetW}x${markTargetH}, text ${Math.round(textW)}px wide)`);
 }
 
+// ---------- Lockup chromakey ----------
+// horizontal-dark.png ships with a solid #1A3514 (deep-forest) fill
+// behind the glyphs. On dark sections that's invisible; on cream
+// sections (Production, share, BigQuote) the fill creates a visible
+// rectangular boundary against the nav's color-mix(deep-forest 88%, T)
+// surface. Generate a transparent-bg variant alongside the original.
+async function buildTransparentLockup() {
+  const SRC = 'public/images/horizontal-dark.png';
+  const OUT = 'public/images/horizontal-dark-transparent.png';
+  const BG = [26, 53, 20]; // #1A3514
+
+  const { data, info } = await sharp(SRC).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const out = Buffer.alloc(data.length);
+
+  // Smooth chromakey + de-spill:
+  //   alpha rises from 0 to 255 as the pixel diverges from BG.
+  //   Edge pixels get the bg contribution subtracted out so they
+  //   don't carry a green tint when composited on cream.
+  const TRANSPARENT_BELOW = 12;   // dist <= this → fully transparent
+  const OPAQUE_ABOVE      = 70;   // dist >= this → fully opaque
+  const SPAN              = OPAQUE_ABOVE - TRANSPARENT_BELOW;
+
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i], g = data[i + 1], b = data[i + 2];
+    const dr = r - BG[0], dg = g - BG[1], db = b - BG[2];
+    const dist = Math.sqrt(dr * dr + dg * dg + db * db);
+
+    let alpha;
+    if (dist <= TRANSPARENT_BELOW)      alpha = 0;
+    else if (dist >= OPAQUE_ABOVE)      alpha = 255;
+    else                                alpha = Math.round(((dist - TRANSPARENT_BELOW) / SPAN) * 255);
+
+    if (alpha === 0) {
+      out[i] = 0; out[i + 1] = 0; out[i + 2] = 0; out[i + 3] = 0;
+    } else if (alpha === 255) {
+      out[i] = r; out[i + 1] = g; out[i + 2] = b; out[i + 3] = 255;
+    } else {
+      // Edge: rendered = α·fg + (1-α)·bg → fg = (rendered - (1-α)·bg) / α
+      const af = alpha / 255;
+      const inv = 1 - af;
+      const cleanR = Math.max(0, Math.min(255, (r - inv * BG[0]) / af));
+      const cleanG = Math.max(0, Math.min(255, (g - inv * BG[1]) / af));
+      const cleanB = Math.max(0, Math.min(255, (b - inv * BG[2]) / af));
+      out[i] = Math.round(cleanR);
+      out[i + 1] = Math.round(cleanG);
+      out[i + 2] = Math.round(cleanB);
+      out[i + 3] = alpha;
+    }
+  }
+
+  await sharp(out, { raw: { width: info.width, height: info.height, channels: 4 } })
+    .png()
+    .toFile(OUT);
+  console.log(`✓ horizontal-dark-transparent.png (${info.width}x${info.height}, dark-forest fill keyed out + de-spilled)`);
+}
+
 await buildFavicons();
 await buildOg();
+await buildTransparentLockup();
 console.log('Done.');

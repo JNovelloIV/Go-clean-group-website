@@ -1,14 +1,4 @@
 ---
-import { existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-
-/**
- * Gallery — §6 "Some honest moments from the hill".
- * Six images with captions. When a file exists at the expected path
- * under /public/images/, a real <img> is rendered; otherwise a labeled
- * placeholder is shown (existsSync check runs at build time).
- */
-
 const images = [
   { src: '/images/no01_flock-mid-morning.jpg',      caption: 'The flock, mid-morning',     alt: 'The duck flock walking at the pond in the mid-morning light' },
   { src: '/images/no02_hands-and-earth.jpg',        caption: 'Hands & earth',              alt: 'A pair of hands working dark soil on the hill' },
@@ -17,11 +7,6 @@ const images = [
   { src: '/images/no05_path-six-months-in.jpg',     caption: 'The path, six months in',    alt: 'A worn path through the grass and plantings, six months after it was first cut' },
   { src: '/images/no06_among-the-grass.jpg',        caption: 'Among the grass',            alt: 'A close view of tall grass growing on the hill' },
 ];
-
-// Resolve /public/images/gallery/<file>.jpg on disk; if it's there,
-// render a real <img>. Otherwise render the styled placeholder.
-const publicDir = fileURLToPath(new URL('../../public', import.meta.url));
-const isAvailable = (src: string) => existsSync(`${publicDir}${src}`);
 ---
 
 <section id="gallery" class="section gallery" aria-labelledby="gallery-headline">
@@ -37,36 +22,20 @@ const isAvailable = (src: string) => existsSync(`${publicDir}${src}`);
     </header>
 
     <ul class="gallery__grid" role="list">
-      {images.map((img, i) => {
-        const num = String(i + 1).padStart(2, '0');
-        const available = isAvailable(img.src);
-        return (
-          <li class={`gallery__item gallery__item--${i + 1}`}>
-            <figure class="gallery__figure">
-              {available ? (
-                <img
-                  class="gallery__img"
-                  src={img.src}
-                  alt={img.alt}
-                  loading="lazy"
-                  decoding="async"
-                />
-              ) : (
-                <div
-                  class="gallery__placeholder"
-                  role={img.decorative ? 'presentation' : 'img'}
-                  aria-hidden={img.decorative ? 'true' : undefined}
-                  aria-label={img.decorative ? undefined : img.alt}
-                  data-expected-src={img.src}
-                >
-                  <span class="gallery__placeholder-mark">No.&nbsp;{num}</span>
-                </div>
-              )}
-              <figcaption class="gallery__caption-line">{img.caption}</figcaption>
-            </figure>
-          </li>
-        );
-      })}
+      {images.map((img, i) => (
+        <li class={`gallery__item gallery__item--${i + 1}`}>
+          <figure class="gallery__figure">
+            <img
+              class="gallery__img"
+              src={img.src}
+              alt={img.alt}
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption class="gallery__caption-line">{img.caption}</figcaption>
+          </figure>
+        </li>
+      ))}
     </ul>
   </div>
 </section>
@@ -143,39 +112,13 @@ const isAvailable = (src: string) => existsSync(`${publicDir}${src}`);
     grid-template-rows: 1fr auto;
   }
 
-  .gallery__img,
-  .gallery__placeholder {
+  .gallery__img {
     width: 100%;
     height: 100%;
     min-height: 220px;
     border-radius: var(--r-md);
     background: var(--forest-tint);
-  }
-
-  .gallery__img {
     object-fit: cover;
-  }
-
-  .gallery__placeholder {
-    display: grid;
-    place-items: center;
-    color: var(--dark-caption);
-    border: 1px dashed var(--gold-28);
-    background:
-      repeating-linear-gradient(
-        45deg,
-        transparent 0 18px,
-        rgba(199,159,87,0.05) 18px 19px
-      );
-    text-align: center;
-    padding: var(--s-6);
-  }
-
-  .gallery__placeholder-mark {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: clamp(28px, 3vw, 42px);
-    color: var(--gold-35);
   }
 
   /* Photo captions — italic gold, design's editorial overlay register. */

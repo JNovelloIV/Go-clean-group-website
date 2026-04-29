@@ -4,27 +4,18 @@ import { fileURLToPath } from 'node:url';
 
 /**
  * Gallery — §6 "Some honest moments from the hill".
- * Six images with captions verbatim from the copy doc. Real photography
- * is not yet supplied; each image renders as a labeled placeholder UNTIL
- * a file is dropped at the expected path under /public/images/gallery/.
- *
- * The user can replace any placeholder by saving a real image at the
- * expected path — the build picks it up automatically (existsSync check
- * runs at build time). Alt text is preserved on the real <img> when a
- * file lands.
- *
- * Image 6 ("Rain, day four") is flagged in TODO-DESIGN-03 as possibly
- * a styled-only tile with no alt text. We treat it as decorative
- * (alt="" + aria-hidden) — the rest get real alt text from the copy doc.
+ * Six images with captions. When a file exists at the expected path
+ * under /public/images/, a real <img> is rendered; otherwise a labeled
+ * placeholder is shown (existsSync check runs at build time).
  */
 
 const images = [
-  { src: '/images/gallery/01-flock-mid-morning.jpg', caption: 'The flock, mid-morning',     alt: 'The duck flock walking at the pond' },
-  { src: '/images/gallery/02-hands-and-earth.jpg',   caption: 'Hands & earth',              alt: 'Hand-mixing compost in the bamboo shed' },
-  { src: '/images/gallery/03-from-above.jpg',        caption: 'From above, on a still day', alt: 'Aerial of the pond and thatched shelter' },
-  { src: '/images/gallery/04-morning-pause.jpg',     caption: 'A morning pause',            alt: 'A person watching ducks at the pond, banana palms behind' },
-  { src: '/images/gallery/05-shade.jpg',             caption: 'Shade, always welcome',      alt: 'Ducks resting under a bamboo shelter' },
-  { src: '/images/gallery/06-rain-day-four.jpg',     caption: 'Rain, day four',             alt: '', decorative: true },
+  { src: '/images/no01_flock-mid-morning.jpg',      caption: 'The flock, mid-morning',     alt: 'The duck flock walking at the pond in the mid-morning light' },
+  { src: '/images/no02_hands-and-earth.jpg',        caption: 'Hands & earth',              alt: 'A pair of hands working dark soil on the hill' },
+  { src: '/images/no03_from-above.jpg',             caption: 'From above, on a still day', alt: 'An overhead view of the land and pond on a still day' },
+  { src: '/images/no04_frame-going-up.jpg',         caption: 'The frame going up',         alt: 'The wooden structural frame of a building under construction on the hill' },
+  { src: '/images/no05_path-six-months-in.jpg',     caption: 'The path, six months in',    alt: 'A worn path through the grass and plantings, six months after it was first cut' },
+  { src: '/images/no06_among-the-grass.jpg',        caption: 'Among the grass',            alt: 'A close view of tall grass growing on the hill' },
 ];
 
 // Resolve /public/images/gallery/<file>.jpg on disk; if it's there,

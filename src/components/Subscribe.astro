@@ -1,24 +1,5 @@
 ---
-/**
- * Subscribe — §9 "Stay close".
- *
- * Custom-styled dual-channel form per TODO-DESIGN-06. Built in code
- * (not a Tally iframe) so the chip aesthetic, channel chooser, and
- * conditional contact field can match the brand exactly.
- *
- * MILESTONE 2 SCOPE:
- *   - Full form UI rendered, accessible, keyboard-navigable.
- *   - Validation logic in place (email format / phone format).
- *   - Submit button gated on a valid contact value.
- *   - On submit, the payload shape required by the brief is built
- *     and posted to a STUBBED endpoint. Tally form ID is a clearly-
- *     labeled placeholder; the user supplies the real ID in M3.
- *
- *   - SUCCESS state shows a quiet thank-you line.
- *   - ERROR state shows a quiet retry line.
- *
- * MILESTONE 3 will replace the stub with the real Tally endpoint.
- */
+// Subscribe — §9 "Stay close". Email-only signup posted to Formspark.
 
 const Q1_OPTIONS = [
   'A neighbor on Lombok',
@@ -35,33 +16,6 @@ const Q2_OPTIONS = [
   'The slow build of a place',
   'Getting my hands in the soil',
 ];
-
-// Subset of country dial codes — covers The Hill's likely audience.
-// The user can extend this list later. +62 (Indonesia) is the default.
-const COUNTRY_CODES = [
-  { code: '+62',  label: 'Indonesia' },
-  { code: '+61',  label: 'Australia' },
-  { code: '+1',   label: 'USA / Canada' },
-  { code: '+44',  label: 'United Kingdom' },
-  { code: '+33',  label: 'France' },
-  { code: '+49',  label: 'Germany' },
-  { code: '+31',  label: 'Netherlands' },
-  { code: '+34',  label: 'Spain' },
-  { code: '+39',  label: 'Italy' },
-  { code: '+41',  label: 'Switzerland' },
-  { code: '+46',  label: 'Sweden' },
-  { code: '+45',  label: 'Denmark' },
-  { code: '+47',  label: 'Norway' },
-  { code: '+65',  label: 'Singapore' },
-  { code: '+60',  label: 'Malaysia' },
-  { code: '+66',  label: 'Thailand' },
-  { code: '+81',  label: 'Japan' },
-  { code: '+82',  label: 'South Korea' },
-  { code: '+86',  label: 'China' },
-  { code: '+91',  label: 'India' },
-  { code: '+852', label: 'Hong Kong' },
-  { code: '+64',  label: 'New Zealand' },
-];
 ---
 
 <section id="subscribe" class="section subscribe-sec" aria-labelledby="subscribe-headline">
@@ -75,7 +29,7 @@ const COUNTRY_CODES = [
         </h2>
 
         <p class="subscribe__lead">
-          Three of us, hands in the soil. No funnels, no drip sequences. When there's a popup dinner, a workshop, a long table to share — we'll write or message. The daily work is on Instagram.
+          Three of us, hands in the soil. No funnels, no drip sequences. Letters from the farm, written when there's something worth saying. Never more than that. The daily work is on Instagram.
         </p>
       </div>
 
@@ -86,21 +40,7 @@ const COUNTRY_CODES = [
       novalidate
       aria-describedby="subscribe-fineprint"
     >
-      <fieldset class="subscribe__channel" data-channel-group>
-        <legend class="subscribe__legend">How should we reach you?</legend>
-        <div class="subscribe__segmented" role="radiogroup" aria-label="Contact channel">
-          <label class="subscribe__seg-option">
-            <input type="radio" name="channel" value="email" checked />
-            <span>Email</span>
-          </label>
-          <label class="subscribe__seg-option">
-            <input type="radio" name="channel" value="whatsapp" />
-            <span>WhatsApp</span>
-          </label>
-        </div>
-      </fieldset>
-
-      <div class="subscribe__contact" data-contact-email>
+      <div class="subscribe__contact">
         <label class="sr-only" for="contact-email">Email address</label>
         <input
           id="contact-email"
@@ -109,24 +49,6 @@ const COUNTRY_CODES = [
           placeholder="you@email.com"
           autocomplete="email"
           inputmode="email"
-        />
-      </div>
-
-      <div class="subscribe__contact subscribe__contact--phone" data-contact-whatsapp hidden>
-        <label class="sr-only" for="contact-cc">Country code</label>
-        <select id="contact-cc" name="country_code" class="subscribe__cc">
-          {COUNTRY_CODES.map((c) => (
-            <option value={c.code} selected={c.code === '+62'}>{c.code} {c.label}</option>
-          ))}
-        </select>
-        <label class="sr-only" for="contact-phone">WhatsApp number</label>
-        <input
-          id="contact-phone"
-          type="tel"
-          name="phone"
-          placeholder="WhatsApp number"
-          autocomplete="tel-national"
-          inputmode="tel"
         />
       </div>
 
@@ -211,13 +133,13 @@ const COUNTRY_CODES = [
       ></p>
 
       <p id="subscribe-fineprint" class="subscribe__fineprint">
-        Free &amp; quiet. Unsubscribe anytime — reply STOP on WhatsApp, or unsubscribe from any email. We won't share your contact — we barely check ours.
+        Free &amp; quiet. Unsubscribe anytime from any email. We won't share your contact — we barely check ours.
       </p>
     </form>
 
     <div class="subscribe__success" data-subscribe-success hidden role="status" aria-live="polite">
       <p class="subscribe__success-line">
-        We've got you. We'll write or message when there's room.
+        We've got you. Letters land in your inbox, never more than they should.
       </p>
     </div>
 
@@ -244,8 +166,6 @@ const COUNTRY_CODES = [
   // no flattening required.
 
   const form        = document.querySelector<HTMLFormElement>('[data-subscribe-form]');
-  const emailWrap   = document.querySelector<HTMLElement>('[data-contact-email]');
-  const phoneWrap   = document.querySelector<HTMLElement>('[data-contact-whatsapp]');
   const submitBtn   = form?.querySelector<HTMLButtonElement>('.subscribe__submit');
   const statusEl    = form?.querySelector<HTMLElement>('[data-status]');
   const successEl   = document.querySelector<HTMLElement>('[data-subscribe-success]');
@@ -256,10 +176,8 @@ const COUNTRY_CODES = [
 
   const ERROR_MESSAGE = "Something didn't go through. Try again?";
 
-  if (form && emailWrap && phoneWrap && submitBtn && statusEl && successEl && chefExtras && chefAnnounce) {
-    const channelInputs = form.querySelectorAll<HTMLInputElement>('input[name="channel"]');
+  if (form && submitBtn && statusEl && successEl && chefExtras && chefAnnounce) {
     const emailInput    = form.querySelector<HTMLInputElement>('#contact-email');
-    const phoneInput    = form.querySelector<HTMLInputElement>('#contact-phone');
     const chefCheckbox  = form.querySelector<HTMLInputElement>('input[name="i_am"][data-chef]');
     const chefNameInput = form.querySelector<HTMLInputElement>('#chef-name');
     const chefKitchenInput = form.querySelector<HTMLInputElement>('#chef-kitchen');
@@ -311,48 +229,25 @@ const COUNTRY_CODES = [
     });
 
     const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
-    const isValidPhone = (v: string) => /^[0-9 \-()]{6,}$/.test(v.trim());
-
-    const currentChannel = (): 'email' | 'whatsapp' => {
-      const c = form.querySelector<HTMLInputElement>('input[name="channel"]:checked');
-      return (c?.value as 'email' | 'whatsapp') ?? 'email';
-    };
 
     const updateGate = () => {
-      const ch = currentChannel();
-      const valid = ch === 'email'
-        ? !!emailInput && isValidEmail(emailInput.value)
-        : !!phoneInput && isValidPhone(phoneInput.value);
-      submitBtn.disabled = !valid;
+      submitBtn.disabled = !(emailInput && isValidEmail(emailInput.value));
     };
-
-    const setChannel = (ch: 'email' | 'whatsapp') => {
-      emailWrap.toggleAttribute('hidden', ch !== 'email');
-      phoneWrap.toggleAttribute('hidden', ch !== 'whatsapp');
-      updateGate();
-    };
-
-    channelInputs.forEach((input) => {
-      input.addEventListener('change', () => setChannel(currentChannel()));
-    });
 
     emailInput?.addEventListener('input', updateGate);
-    phoneInput?.addEventListener('input', updateGate);
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const ch = currentChannel();
-      const contact = ch === 'email'
-        ? (emailInput?.value.trim() ?? '')
-        : `${(form.querySelector<HTMLSelectElement>('#contact-cc')?.value ?? '+62')}${(phoneInput?.value.trim() ?? '')}`;
+      const contact = emailInput?.value.trim() ?? '';
 
       const i_am     = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="i_am"]:checked')).map((c) => c.value);
       const drawn_to = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="drawn_to"]:checked')).map((c) => c.value);
 
       const payload: Record<string, unknown> = {
-        channel: ch,
+        channel: 'email',
         contact,
+        email: contact,
         i_am,
         drawn_to,
         submitted_at: new Date().toISOString(),
@@ -403,7 +298,7 @@ const COUNTRY_CODES = [
       }
     });
 
-    setChannel('email');
+    updateGate();
   }
 </script>
 
@@ -469,7 +364,6 @@ const COUNTRY_CODES = [
     margin: 0;
   }
 
-  .subscribe__legend,
   .subscribe__chips-legend {
     font-family: var(--font-sans);
     font-size: var(--fs-eyebrow);
@@ -488,65 +382,13 @@ const COUNTRY_CODES = [
     margin-left: var(--s-2);
   }
 
-  .subscribe__channel {
-    border: 0;
-    padding: 0;
-    margin: 0;
-  }
-
-  .subscribe__segmented {
-    display: inline-flex;
-    border: 1px solid var(--gold-28);
-    border-radius: var(--r-full);
-    overflow: hidden;
-    background: var(--forest-mid);
-  }
-
-  .subscribe__seg-option {
-    position: relative;
-    cursor: pointer;
-  }
-
-  .subscribe__seg-option input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .subscribe__seg-option span {
-    display: inline-block;
-    padding: var(--s-3) var(--s-6);
-    font-family: var(--font-sans);
-    font-size: var(--fs-body-sm);
-    color: var(--dark-body);
-    transition: background-color 0.2s ease, color 0.2s ease;
-  }
-
-  .subscribe__seg-option input:checked + span {
-    background: var(--accent);
-    color: var(--deep-forest);
-    font-weight: 500;
-  }
-
-  .subscribe__seg-option input:focus-visible + span {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
-  }
-
   /* Contact field --------------------------------------------------- */
   .subscribe__contact {
     display: grid;
     gap: var(--s-2);
   }
 
-  .subscribe__contact--phone {
-    grid-template-columns: minmax(140px, 200px) 1fr;
-    gap: var(--s-3);
-  }
-
-  .subscribe__form input[type="email"],
-  .subscribe__form input[type="tel"],
-  .subscribe__form select {
+  .subscribe__form input[type="email"] {
     width: 100%;
     padding: var(--s-4) var(--s-5);
     background: var(--forest-mid);
@@ -564,8 +406,7 @@ const COUNTRY_CODES = [
     opacity: 1;
   }
 
-  .subscribe__form input:focus,
-  .subscribe__form select:focus {
+  .subscribe__form input:focus {
     outline: none;
     border-color: var(--accent);
   }
@@ -778,11 +619,5 @@ const COUNTRY_CODES = [
       padding: 48px 32px;
     }
     .subscribe__headline { font-size: 48px; }
-  }
-
-  @media (max-width: 720px) {
-    .subscribe__contact--phone {
-      grid-template-columns: 1fr;
-    }
   }
 </style>

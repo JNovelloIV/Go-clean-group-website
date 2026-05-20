@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://thehill.id',
+  site: 'https://gocleangroup.com',
   integrations: [sitemap()],
   build: {
     inlineStylesheets: 'auto',

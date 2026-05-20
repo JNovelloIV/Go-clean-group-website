@@ -1,0 +1,73 @@
+---
+import BrandLogo from "./BrandLogo.astro";
+const MAPS_URL = "https://www.google.com/maps/place/Goclean+kuta+lombok/@-8.8838047,116.2701107,944m/data=!3m2!1e3!4b1!4m6!3m5!1s0x2dcda978513916cd:0x481e9a741050acee!8m2!3d-8.88381!4d116.2726856!16s%2Fg%2F11ykw22_5x";
+---
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#top" class="brand" style="color:var(--paper);">
+          <BrandLogo onDark />
+          <span class="brand-name" style="color:var(--paper);">GoClean<em style="color:var(--mint);"> Group</em></span>
+        </a>
+        <p
+          data-en="Live fresh. Feel clean. A small local team cleaning villas in Kuta, Lombok since 2025."
+          data-id="Hidup segar. Rasa bersih. Tim lokal kecil yang membersihkan villa di Kuta, Lombok sejak 2025."
+        >
+          Live fresh. Feel clean. A small local team cleaning villas in Kuta, Lombok since 2025.
+        </p>
+        <div class="footer-socials">
+          <a href="https://wa.me/6287864573925" target="_blank" rel="noopener" aria-label="WhatsApp">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4l-2.3-1c-.3-.1-.7 0-.9.3l-.9 1.1c-1.5-.7-2.7-1.9-3.4-3.4l1.1-.9c.3-.2.4-.6.3-.9l-1-2.3c-.2-.5-.7-.7-1.2-.5L7.4 7.5c-.5.2-.9.7-.9 1.3.1 4.4 3.6 7.9 8 8 .6 0 1.1-.3 1.3-.9l.5-1.3c.2-.5 0-1-.5-1.2zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.1-1.3c1.5.8 3.1 1.3 4.9 1.3 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+          </a>
+          <a href="https://instagram.com/gocleangroup" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://facebook.com/gocleangroup" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H8v-2.9h2.4V9.4c0-2.4 1.4-3.7 3.6-3.7 1 0 2.1.2 2.1.2v2.3h-1.2c-1.2 0-1.5.7-1.5 1.5V12h2.6l-.4 2.9h-2.2v7A10 10 0 0 0 22 12z"/></svg>
+          </a>
+          <a href={MAPS_URL} target="_blank" rel="noopener" aria-label="Google Maps">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h4 data-en="Services" data-id="Layanan">Services</h4>
+        <ul>
+          <li><a href="#services" data-en="Regular cleaning" data-id="Cleaning rutin">Regular cleaning</a></li>
+          <li><a href="#services" data-en="Deep cleaning" data-id="Deep cleaning">Deep cleaning</a></li>
+          <li><a href="#services" data-en="Exterior glass" data-id="Kaca luar">Exterior glass</a></li>
+          <li><a href="#services" data-en="Garden care" data-id="Perawatan taman">Garden care</a></li>
+          <li><a href="#services" data-en="Pre-opening deep clean" data-id="Bersih total pra-buka">Pre-opening deep clean</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-en="Company" data-id="Perusahaan">Company</h4>
+        <ul>
+          <li><a href="#pricing" data-en="Pricing" data-id="Harga">Pricing</a></li>
+          <li><a href="#how" data-en="How it works" data-id="Cara kerja">How it works</a></li>
+          <li><a href="#area" data-en="Service area" data-id="Area layanan">Service area</a></li>
+          <li><a href="#faq" data-en="FAQ" data-id="FAQ">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-en="Contact" data-id="Kontak">Contact</h4>
+        <ul>
+          <li><a href="https://wa.me/6287864573925" target="_blank" rel="noopener">WhatsApp · +62 878 6457 3925</a></li>
+          <li><a href="mailto:goclean277@gmail.com">goclean277@gmail.com</a></li>
+          <li><span data-en="Kuta, Lombok Tengah" data-id="Kuta, Lombok Tengah">Kuta, Lombok Tengah</span></li>
+          <li><span data-en="Open 08.00–18.00 · every day" data-id="Buka 08.00–18.00 · setiap hari">Open 08.00–18.00 · every day</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="yr"></span> GoClean Group. <span data-en="All rights reserved." data-id="Semua hak dilindungi.">All rights reserved.</span></span>
+      <span data-en="Live fresh. Feel clean." data-id="Hidup segar. Rasa bersih.">Live fresh. Feel clean.</span>
+    </div>
+  </div>
+</footer>
+
+<a class="float-wa" href="https://wa.me/6287864573925?text=Halo%20GoClean%2C%20saya%20ingin%20booking%20cleaning." target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4l-2.3-1c-.3-.1-.7 0-.9.3l-.9 1.1c-1.5-.7-2.7-1.9-3.4-3.4l1.1-.9c.3-.2.4-.6.3-.9l-1-2.3c-.2-.5-.7-.7-1.2-.5L7.4 7.5c-.5.2-.9.7-.9 1.3.1 4.4 3.6 7.9 8 8 .6 0 1.1-.3 1.3-.9l.5-1.3c.2-.5 0-1-.5-1.2zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.1-1.3c1.5.8 3.1 1.3 4.9 1.3 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+</a>

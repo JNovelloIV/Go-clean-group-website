@@ -1,0 +1,91 @@
+---
+const items: { q: { en: string; id: string }; a: { en: string; id: string } }[] = [
+  {
+    q: { en: "What's the difference between regular and deep cleaning?", id: "Apa beda regular cleaning dan deep cleaning?" },
+    a: {
+      en: "Regular cleaning is your weekly reset — floors, bathrooms, kitchen surfaces, beds made, trash out. Deep cleaning adds the inside of fridge, oven and microwave, behind appliances, grout scrubbing, windows inside & out, ceiling fans, AC vents, and detailed bathroom & kitchen work. Most villas need a regular clean weekly and a deep clean every few months or between long-stay guests.",
+      id: "Cleaning rutin adalah reset mingguan — lantai, kamar mandi, dapur, tempat tidur, sampah. Deep cleaning menambah dalam kulkas, oven, microwave, belakang perabot, sikat nat, jendela dalam & luar, kipas plafon, ventilasi AC, dan pembersihan detail kamar mandi & dapur. Kebanyakan villa butuh rutin tiap minggu dan deep cleaning tiap beberapa bulan atau antar tamu.",
+    },
+  },
+  {
+    q: { en: "How fast do you reply on WhatsApp?", id: "Seberapa cepat Anda balas WhatsApp?" },
+    a: {
+      en: "We aim to reply as fast as we can during work hours (08.00–18.00, every day). If we're mid-job we may be slower — but we always reply.",
+      id: "Kami berusaha membalas secepat mungkin di jam kerja (08.00–18.00, setiap hari). Saat sedang bekerja mungkin lebih lambat — tetapi kami selalu balas.",
+    },
+  },
+  {
+    q: { en: "Do I need to provide cleaning supplies?", id: "Apakah saya perlu menyediakan alat cleaning?" },
+    a: {
+      en: "No. We bring our own tools, cloths and supplies — that's our standard. You just open the gate.",
+      id: "Tidak. Kami bawa alat, lap, dan perlengkapan sendiri — itu standar kami. Anda cukup buka gerbang.",
+    },
+  },
+  {
+    q: { en: "Which areas do you serve?", id: "Daerah mana saja yang dilayani?" },
+    a: {
+      en: "Standard pricing across Kuta Centre, Tanjung Aan and Gerupuk. Selong Belanak adds Rp 50,000 transport. Somewhere else near Kuta? Message us and we'll let you know.",
+      id: "Harga standar di Kuta Centre, Tanjung Aan, dan Gerupuk. Selong Belanak +Rp 50.000 transport. Lokasi lain dekat Kuta? Chat kami dan akan kami konfirmasi.",
+    },
+  },
+  {
+    q: { en: "How do I pay?", id: "Bagaimana cara bayar?" },
+    a: {
+      en: "Cash or bank transfer — your choice. You always pay AFTER the work is done and you've inspected the villa with us.",
+      id: "Tunai atau transfer bank — pilihan Anda. Selalu bayar SETELAH pekerjaan selesai dan Anda cek villa bersama kami.",
+    },
+  },
+  {
+    q: { en: "Can I book a recurring weekly or monthly clean?", id: "Bisa booking rutin mingguan atau bulanan?" },
+    a: {
+      en: "Yes. Weekly bookings get 15% off and monthly contracts get 20% off. Tell us your preferred day and time when you message.",
+      id: "Bisa. Booking mingguan diskon 15%, kontrak bulanan diskon 20%. Beritahu hari dan jam yang Anda inginkan saat chat.",
+    },
+  },
+  {
+    q: { en: "What's your cancellation policy?", id: "Bagaimana kebijakan pembatalan?" },
+    a: {
+      en: "Please give us at least 2–3 hours notice. There's no formal cancellation fee. If the team is already on the way, we may charge transport cost only.",
+      id: "Mohon kabari minimal 2–3 jam sebelumnya. Tidak ada biaya pembatalan resmi. Jika tim sudah dalam perjalanan, kami hanya menghitung biaya transport.",
+    },
+  },
+  {
+    q: { en: "Can I trust your team in my villa?", id: "Apakah tim Anda bisa dipercaya di villa saya?" },
+    a: {
+      en: "We're a small team of three, all Kuta natives — born here and working in tourism since before Kuta was a major destination. Same faces every visit, no rotating strangers. Two of us speak basic English. Our work is reviewed openly on Google. If anything's not right, tell us during the inspection and we'll make it right before you pay.",
+      id: "Kami tim kecil bertiga, semuanya asli Kuta — lahir di sini dan di industri turis sejak Kuta belum jadi destinasi besar. Wajah yang sama tiap kunjungan, bukan orang asing yang berganti. Dua dari kami bisa bahasa Inggris dasar. Pekerjaan kami diulas terbuka di Google. Jika ada yang kurang, sampaikan saat inspeksi dan kami perbaiki sebelum Anda bayar.",
+    },
+  },
+];
+---
+<section class="section cream" id="faq">
+  <div class="container">
+    <div class="section-head reveal" style="text-align:center; margin-left:auto; margin-right:auto;">
+      <span class="eyebrow" data-en="FAQ" data-id="FAQ">FAQ</span>
+      <h2 style="margin-top:10px;">
+        <span data-en="Questions, answered" data-id="Pertanyaan, dijawab">Questions, answered</span>
+        {" "}
+        <span class="italic" data-en="honestly." data-id="dengan jujur.">honestly.</span>
+      </h2>
+    </div>
+
+    <div class="faq-list reveal" id="faqList">
+      {items.map(({ q, a }) => (
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span data-en={q.en} data-id={q.id}>{q.en}</span>
+            <span class="plus" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </span>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner" data-en={a.en} data-id={a.id}>{a.en}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

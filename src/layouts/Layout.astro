@@ -1,26 +1,28 @@
 ---
 import "../styles/base.css";
+import "../styles/components.css";
 
 interface Props {
-  title: string;
+  title?: string;
   description?: string;
   ogImage?: string;
 }
 
 const {
-  title,
-  description = "Go Clean Group — coming soon.",
-  ogImage = "/og-image.png",
+  title = "GoClean Group — Villa cleaning in Kuta, Lombok",
+  description = "Villa cleaning, deep cleaning, exterior glass and garden care in Kuta, Lombok. Local team. Fair, published prices. Book on WhatsApp.",
+  ogImage = "/og-image.jpg",
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const ogImageAbs = new URL(ogImage, Astro.site).toString();
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
     <meta name="generator" content={Astro.generator} />
 
     <title>{title}</title>
@@ -28,18 +30,33 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <link rel="canonical" href={canonical} />
 
     <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content="Live fresh. Feel clean. Local villa cleaning in Kuta, Lombok. Book on WhatsApp." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL(ogImage, Astro.site).toString()} />
-
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="id_ID" />
+    <meta property="og:image" content={ogImageAbs} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
   <body>
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+    <div class="cursor-accent" id="cursorAccent" aria-hidden="true"></div>
+
     <slot />
+
+    <script>
+      import "../scripts/client.ts";
+    </script>
   </body>
 </html>

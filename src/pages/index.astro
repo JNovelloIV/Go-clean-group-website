@@ -1,28 +1,32 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import Services from "../components/Services.astro";
+import Compare from "../components/Compare.astro";
+import Pricing from "../components/Pricing.astro";
+import HowItWorks from "../components/HowItWorks.astro";
+import Why from "../components/Why.astro";
+import Reviews from "../components/Reviews.astro";
+import Area from "../components/Area.astro";
+import FAQ from "../components/FAQ.astro";
+import Contact from "../components/Contact.astro";
+import Footer from "../components/Footer.astro";
 ---
 
-<Layout title="Go Clean Group">
-  <main class="container">
-    <section class="hero">
-      <h1>Go Clean Group</h1>
-      <p>Scaffold ready. The design will land here.</p>
-    </section>
+<Layout>
+  <Header />
+  <main id="top">
+    <Hero />
+    <Services />
+    <Compare />
+    <Pricing />
+    <HowItWorks />
+    <Why />
+    <Reviews />
+    <Area />
+    <FAQ />
+    <Contact />
   </main>
+  <Footer />
 </Layout>
-
-<style>
-  .hero {
-    padding-block: var(--space-16);
-  }
-
-  .hero h1 {
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
-    margin-bottom: var(--space-4);
-  }
-
-  .hero p {
-    color: var(--color-muted);
-    font-size: 1.125rem;
-  }
-</style>

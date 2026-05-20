@@ -1,7 +1,6 @@
 ---
-import '../styles/fonts.css';
-import '../styles/tokens.css';
-import '../styles/base.css';
+import "../styles/base.css";
+import "../styles/components.css";
 
 interface Props {
   title?: string;
@@ -10,63 +9,54 @@ interface Props {
 }
 
 const {
-  title = 'The Hill — a place being built, with intention.',
-  description = 'A place being built, with intention. Darek · Central Lombok · Since mid-2024.',
-  ogImage = '/og-image.png',
+  title = "GoClean Group — Villa cleaning in Kuta, Lombok",
+  description = "Villa cleaning, deep cleaning, exterior glass and garden care in Kuta, Lombok. Local team. Fair, published prices. Book on WhatsApp.",
+  ogImage = "/og-image.jpg",
 } = Astro.props;
 
-const site = Astro.site ?? new URL('https://thehill.id');
-const canonical = new URL(Astro.url.pathname, site).toString();
-const ogImageUrl = new URL(ogImage, site).toString();
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const ogImageAbs = new URL(ogImage, Astro.site).toString();
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="generator" content={Astro.generator} />
+
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="generator" content={Astro.generator} />
 
-    <!-- Icons — generated from mark-gold-no-roots.png (per brand book) -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
-    <link rel="icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-
-    <!-- Open Graph -->
     <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content="Live fresh. Feel clean. Local villa cleaning in Kuta, Lombok. Book on WhatsApp." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
     <meta property="og:locale" content="en_US" />
-    <meta property="og:site_name" content="The Hill" />
-
-    <!-- Twitter -->
+    <meta property="og:locale:alternate" content="id_ID" />
+    <meta property="og:image" content={ogImageAbs} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImageUrl} />
 
-    <!-- Theme -->
-    <meta name="theme-color" content="#1A3514" />
-    <meta name="color-scheme" content="dark light" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-    <!-- Preload primary fonts (latin subset, variable) -->
-    <link rel="preload" href="/fonts/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/cormorant-garamond-italic.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/dm-sans.woff2" as="font" type="font/woff2" crossorigin />
-
-    <!-- Sitemap discoverability -->
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+    <div class="cursor-accent" id="cursorAccent" aria-hidden="true"></div>
+
     <slot />
+
+    <script>
+      import "../scripts/client.ts";
+    </script>
   </body>
 </html>

@@ -1,0 +1,56 @@
+---
+import BrandLogo from "./BrandLogo.astro";
+
+const WA_BOOK = "https://wa.me/6287864573925?text=Halo%20GoClean%2C%20saya%20ingin%20booking%20cleaning.";
+---
+<header class="site-header" id="siteHeader">
+  <div class="container nav">
+    <a href="#top" class="brand" aria-label="GoClean Group home">
+      <BrandLogo />
+      <span class="brand-name">GoClean<em> Group</em></span>
+    </a>
+
+    <span class="section-counter" id="sectionCounter" aria-hidden="true">
+      <span class="num" id="scNum">01</span>
+      <span class="sep">/</span>
+      <span class="num" id="scTotal">10</span>
+      <span class="sep">·</span>
+      <span class="name" id="scName">Hero</span>
+    </span>
+
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#services" data-en="Services" data-id="Layanan">Services</a>
+      <a href="#pricing" data-en="Pricing" data-id="Harga">Pricing</a>
+      <a href="#how" data-en="How it works" data-id="Cara kerja">How it works</a>
+      <a href="#faq" data-en="FAQ" data-id="FAQ">FAQ</a>
+
+      <span class="lang-toggle lang-anchor" role="group" aria-label="Language">
+        <button type="button" data-lang-btn="en" class="active">EN</button>
+        <button type="button" data-lang-btn="id">ID</button>
+      </span>
+
+      <a class="btn btn-primary nav-cta" href={WA_BOOK} target="_blank" rel="noopener">
+        <span class="live-dot" aria-hidden="true"></span>
+        <span class="btn-label-long" data-en="WhatsApp us" data-id="WhatsApp kami">WhatsApp us</span>
+      </a>
+
+      <button class="menu-btn" aria-label="Open menu" id="menuBtn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="13" x2="20" y2="13"/><line x1="4" y1="19" x2="20" y2="19"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+  <div class="panel">
+    <button class="close-btn" aria-label="Close menu" id="closeDrawer">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
+    </button>
+    <a href="#services" data-en="Services" data-id="Layanan">Services</a>
+    <a href="#pricing" data-en="Pricing" data-id="Harga">Pricing</a>
+    <a href="#how" data-en="How it works" data-id="Cara kerja">How it works</a>
+    <a href="#why" data-en="Why GoClean" data-id="Mengapa GoClean">Why GoClean</a>
+    <a href="#faq" data-en="FAQ" data-id="FAQ">FAQ</a>
+    <a href="#contact" data-en="Contact" data-id="Kontak">Contact</a>
+  </div>
+</div>

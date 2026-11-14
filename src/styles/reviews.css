@@ -1,0 +1,230 @@
+/* Reviews (proposed 2026-11-14)
+   Scoped: every class starts with rv-. Uses tokens.css only. No edits to other components.
+   Contrast (WCAG 2.2, computed from tokens):
+     paper on forest 6.3:1 · mist on forest 4.8:1 · forest on mist 4.8:1
+     ink-2 on paper 7.0:1 · ink-2 on mist 5.3:1 · forest on paper 6.3:1
+   Mint on forest is only 2.8:1 and sage on mist 2.4:1, so neither is used for text here.
+   Clay stars on paper are 2.3:1: they are decorative (aria-hidden) and always paired
+   with the rating as text, so they carry no meaning on their own. */
+
+/* ---------- 1. Head ---------- */
+.rv-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(24px, 4vw, 56px);
+  align-items: end;
+  margin-bottom: clamp(24px, 3vw, 36px);
+}
+.rv-head .section-head { margin-bottom: 0; }
+.rv-lead {
+  margin: 16px 0 0;
+  max-width: 52ch;
+  font-size: clamp(16px, 1.4vw, 18px);
+  color: var(--ink-2);
+}
+
+.rv-rating {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 20px 24px 8px;
+  min-width: 300px;
+}
+.rv-rating-top { display: flex; align-items: center; gap: 16px; }
+.rv-score {
+  font-family: var(--serif); font-weight: 300;
+  font-size: 52px; line-height: 1; letter-spacing: -.02em;
+  color: var(--forest);
+  font-variant-numeric: tabular-nums;
+}
+.rv-rating-detail { display: flex; flex-direction: column; gap: 4px; }
+.rv-stars { color: var(--clay); letter-spacing: 2px; font-size: 18px; line-height: 1; }
+.rv-stars-sm { font-size: 14px; letter-spacing: 1.5px; }
+.rv-rating-count { font-size: 14px; color: var(--ink-2); line-height: 1.35; }
+
+.rv-rating-link {
+  margin-top: 16px;
+  border-top: 1px solid var(--line);
+  min-height: 48px;               /* touch target */
+  display: flex; align-items: center; gap: 8px;
+  font-size: 14.5px; font-weight: 600; color: var(--forest);
+}
+.rv-rating-link:hover span:not(.sr-only),
+.rv-rating-link:focus-visible span:not(.sr-only) {
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.rv-ico { width: 18px; height: 18px; flex-shrink: 0; }
+.rv-ico-sm { width: 15px; height: 15px; margin-left: auto; }
+
+@media (max-width: 880px) {
+  .rv-head { grid-template-columns: 1fr; align-items: start; gap: 22px; }
+  .rv-rating { min-width: 0; }
+}
+
+/* ---------- 2. Topics (static, must not look clickable) ---------- */
+.rv-themes {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 10px 14px;
+  margin-bottom: clamp(24px, 3vw, 36px);
+}
+.rv-themes-label { margin: 0; font-size: 14px; font-weight: 500; color: var(--ink-2); }
+.rv-theme-list { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.rv-theme {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--mist); color: var(--forest);
+  font-size: 14px; font-weight: 500; line-height: 1.2;
+  cursor: default;
+}
+.rv-theme::before {
+  content: ""; width: 6px; height: 6px; border-radius: 999px;
+  background: var(--forest); opacity: .5; flex-shrink: 0;
+}
+@media (max-width: 560px) { .rv-themes-label { flex-basis: 100%; } }
+
+/* ---------- 3. Review grid ---------- */
+.rv-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 18px;
+}
+.rv-card {
+  margin: 0;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 28px;
+  display: flex; flex-direction: column; gap: 14px;
+  min-width: 0;
+}
+.rv-card blockquote { margin: 0; }
+.rv-card blockquote p {
+  margin: 0;
+  font-family: var(--serif); font-weight: 300;
+  font-size: 18px; line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: break-word;
+}
+.rv-card:not(.rv-hero) blockquote p::before { content: "\201C"; color: var(--sage); margin-right: 1px; }
+.rv-card:not(.rv-hero) blockquote p::after  { content: "\201D"; color: var(--sage); margin-left: 1px; }
+
+/* Attribution */
+.rv-by {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 4px 12px;
+  font-size: 13.5px; color: var(--ink-2);
+}
+.rv-by strong { color: var(--forest); font-weight: 600; font-size: 15px; overflow-wrap: anywhere; }
+
+/* Featured (hero) review */
+.rv-hero {
+  grid-row: span 2;
+  position: relative; overflow: hidden;
+  background: var(--forest); color: var(--paper);
+  border-color: transparent;
+  box-shadow: var(--shadow-md);
+  padding: clamp(28px, 4vw, 44px);
+  gap: 18px;
+}
+.rv-hero::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(60% 50% at 90% 0%, rgba(95,191,159,.42), transparent 60%),
+    radial-gradient(50% 40% at 0% 100%, rgba(197,232,216,.14), transparent 60%);
+}
+/* :not(.sr-only) — otherwise this would override .sr-only's position:absolute
+   and put the screen-reader text on screen. */
+.rv-hero > *:not(.sr-only) { position: relative; z-index: 1; }
+.rv-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--mist);
+}
+.rv-tag::before { content: ""; width: 6px; height: 6px; border-radius: 999px; background: var(--mint); }
+.rv-mark {
+  font-family: var(--serif); font-style: italic;
+  font-size: 76px; line-height: .5; color: var(--mint);
+  display: block; margin-top: 18px;
+}
+.rv-hero blockquote p {
+  color: var(--paper);
+  font-size: clamp(20px, 2.1vw, 27px);
+  line-height: 1.42; letter-spacing: -.01em;
+}
+.rv-hero blockquote em { font-style: italic; color: var(--mist); }
+.rv-hero.is-long blockquote p { font-size: clamp(18px, 1.7vw, 22px); line-height: 1.5; }
+.rv-hero .rv-by { color: rgba(255,255,255,.85); border-top-color: rgba(255,255,255,.16); }
+.rv-hero .rv-by strong { color: var(--paper); }
+.rv-hero .rv-stars { color: var(--mist); }
+
+@media (max-width: 880px) {
+  .rv-grid { grid-template-columns: 1fr; }
+  .rv-hero { grid-row: auto; }
+}
+@media (max-width: 480px) {
+  .rv-card { padding: 24px 22px; }
+  .rv-hero { padding: 28px 22px; }
+}
+
+/* ---------- 4. Bridge to booking ---------- */
+.rv-cta {
+  margin-top: 18px;
+  background: var(--mist);
+  border-radius: var(--r-lg);
+  padding: clamp(22px, 3vw, 32px) clamp(22px, 3vw, 36px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 22px clamp(24px, 4vw, 48px);
+  align-items: center;
+}
+.rv-cta-quote { margin: 0; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.rv-cta-quote blockquote { margin: 0; }
+.rv-cta-quote blockquote p {
+  margin: 0;
+  font-family: var(--serif); font-weight: 400;
+  font-size: clamp(19px, 1.8vw, 23px); line-height: 1.35;
+  color: var(--forest);
+}
+.rv-cta-quote blockquote p::before { content: "\201C"; }
+.rv-cta-quote blockquote p::after  { content: "\201D"; }
+.rv-cta-quote .rv-by { margin-top: 0; padding-top: 0; border-top: 0; }
+
+.rv-cta-act { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.rv-cta-ask {
+  margin: 0;
+  font-family: var(--serif); font-size: 20px; line-height: 1.25;
+  color: var(--forest);
+}
+.rv-cta-btn { min-height: 48px; }
+.rv-cta-meta {
+  margin: 0;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px;
+  font-size: 13.5px; color: var(--ink-2);
+}
+.rv-cta-alt {
+  color: var(--forest); font-weight: 500;
+  text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px;
+  padding: 6px 0;                  /* larger hit area, same line position */
+}
+.rv-cta-alt:hover { text-decoration-thickness: 2px; }
+
+@media (max-width: 880px) {
+  .rv-cta { grid-template-columns: 1fr; }
+  .rv-cta-act { align-items: stretch; }
+  .rv-cta-btn { justify-content: center; white-space: normal; text-align: center; }
+}
+
+/* ---------- Focus (keyboard) ---------- */
+.rv a:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+.rv .btn:focus-visible { border-radius: 999px; }
+
+/* Reduced motion: base.css already disables transitions; nothing here animates. */

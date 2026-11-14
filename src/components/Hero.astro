@@ -1,4 +1,6 @@
 ---
+import { BOOKING_URL } from "../config";
+const bookHref = BOOKING_URL ? `${BOOKING_URL.replace(/\/+$/, "")}/book` : null;
 const WA_BOOK = "https://wa.me/6287864573925?text=Halo%20GoClean%2C%20saya%20ingin%20booking%20cleaning.";
 ---
 <section class="hero">
@@ -26,6 +28,7 @@ const WA_BOOK = "https://wa.me/6287864573925?text=Halo%20GoClean%2C%20saya%20ing
             <span data-en="See pricing" data-id="Lihat harga">See pricing</span>
             <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
           </a>
+          {bookHref && <a class="btn btn-ghost" href={bookHref}><span data-en="Book online" data-id="Booking online">Book online</span></a>}
         </div>
       </div>
 

@@ -1,56 +1,222 @@
-<section class="section cream" id="reviews">
+---
+/*
+  Reviews (redesigned 2026-11-14). Styles: src/styles/reviews.css (all classes prefixed `rv-`).
+  Source reviews and design notes live outside the repo: ~/Companies/go-clean/website-reviews/.
+
+  QUOTING RULES (from GOOGLE-REVIEWS-2026-11-14.md, binding):
+  - Quotes are verbatim English originals only. Never translate, tidy or fix typos.
+  - Quotes are NOT given data-en/data-id: they stay in English in both languages,
+    and carry lang="en" so screen readers voice them correctly on the ID page.
+  - Never feature Joe Novello's review.
+*/
+import "../styles/reviews.css";
+
+/* ---- Live numbers from the Google listing. Change them here and nowhere else. ---- */
+const RATING_EN = "5.0";
+const RATING_ID = "5,0"; // Indonesian uses a decimal comma, as Google.co.id does
+const REVIEW_COUNT = 13;
+const ALL_FIVE_STAR = true; // set to false the day any review is under 5 stars
+
+const MAPS_URL =
+  "https://www.google.com/maps/place/Goclean+kuta+lombok/@-8.8838047,116.2701107,944m/data=!3m2!1e3!4b1!4m6!3m5!1s0x2dcda978513916cd:0x481e9a741050acee!8m2!3d-8.88381!4d116.2726856!16s%2Fg%2F11ykw22_5x";
+const WA_BOOK =
+  "https://wa.me/6287864573925?text=Halo%20GoClean%2C%20saya%20ingin%20booking%20cleaning.";
+
+type Bi = { en: string; id: string };
+type Review = {
+  name: string;
+  meta: Bi;
+  text: string;       // verbatim, character for character
+  highlight?: string; // optional: an exact substring of `text`, set in italic. Never altered.
+};
+
+const GOOGLE: Bi = { en: "Google review", id: "Ulasan Google" };
+const LOCAL_GUIDE: Bi = { en: "Google · Local Guide", id: "Google · Local Guide" };
+
+/*
+  TODO(david-fischer) — the hero slot is built for him.
+  His review (Local Guide, 292 reviews) is the strongest on the listing, but it was
+  only captured in Google's Indonesian translation. DO NOT quote it until someone
+  opens the listing, taps "See original" on his review, and copies the English
+  word for word into GOOGLE-REVIEWS-*.md.
+  Gist (NOT a quote): young team cleans their 2-bedroom house regularly; quick
+  sweep-and-mop or full top-to-bottom incl. sheets; thorough, reliable; calm with
+  dogs; trustworthy, never snoop ("leave a wallet with 2 million rupiah and it
+  would still be there"); missed an ashtray once, still 10 out of 10; "a team you
+  can trust".
+  When the original is in hand:
+    1. featured = { name: "David Fischer", meta: LOCAL_GUIDE, text: <verbatim excerpt>,
+                    highlight: <the wallet sentence, exact> }
+       Excerpt = contiguous original sentences, max ~90 words, "…" where cut.
+       Lead with the trust / wallet passage. If over ~60 words, set HERO_LONG = true.
+    2. side = [babyFi, maria]   (Carina drops out; "Good with dogs" stays as a topic chip)
+*/
+const babyFi: Review = {
+  name: "Baby Fi",
+  meta: GOOGLE,
+  text: "I've used this cleaning service several times now, and there's a good reason I keep coming back. They consistently do an excellent job. The team is professional, thorough, and pays attention to the little details, leaving everything spotless and well-organized. Every time they've cleaned my place, it's looked and felt fresh. Their reliability and high standard of work are exactly why I continue to use and recommend their service 🫶🏻",
+  highlight: "there's a good reason I keep coming back",
+};
+
+const maria: Review = {
+  name: "Maria G",
+  meta: LOCAL_GUIDE,
+  text: "We were looking for a new cleaner as the last one was not so friendly and not cleaning well. We were sooo happy with the boys. Always the biggest smile, very good communication and they were cleaning very well! Thank you guys",
+};
+
+const carina: Review = {
+  name: "Carina Lisa",
+  meta: LOCAL_GUIDE,
+  // Verbatim excerpt: the first four sentences; the review continues on Google.
+  text: "Amazing team with amazing people. They clean very well and in detail. They are reliable, dog friendly, kind and bring good energy. Highly recommended. …",
+};
+
+const william: Review = {
+  name: "William Price",
+  meta: GOOGLE,
+  text: "Good cleaning service. Easy to book and always on time",
+};
+
+const featured: Review = babyFi;
+const HERO_LONG = false;
+const side: Review[] = [maria, carina];
+const bridge: Review = william;
+
+/* Google's own topic tags for the listing, most-mentioned first. */
+const themes: Bi[] = [
+  { en: "The team", id: "Timnya" },
+  { en: "Cleaning quality", id: "Kualitas cleaning" },
+  { en: "Attention to detail", id: "Teliti sampai detail" },
+  { en: "Friendly staff", id: "Staf yang ramah" },
+  { en: "Reliable", id: "Bisa diandalkan" },
+  { en: "Good with dogs", id: "Ramah dengan anjing" },
+];
+
+function parts(r: Review): [string, string, string] | null {
+  if (!r.highlight) return null;
+  const i = r.text.indexOf(r.highlight);
+  if (i < 0) return null; // highlight not an exact substring: render plain, never guess
+  return [r.text.slice(0, i), r.highlight, r.text.slice(i + r.highlight.length)];
+}
+const fParts = parts(featured);
+
+const lead: Bi = ALL_FIVE_STAR
+  ? {
+      en: "Every review on our Google listing is five stars. Here are a few in full, unedited — the way customers wrote them.",
+      id: "Semua ulasan di Google kami bintang lima. Beberapa kami tampilkan utuh, tanpa diedit, dalam bahasa aslinya.",
+    }
+  : {
+      en: `Rated ${RATING_EN} from ${REVIEW_COUNT} reviews on Google. Here are a few in full, unedited — the way customers wrote them.`,
+      id: `Nilai ${RATING_ID} dari ${REVIEW_COUNT} ulasan di Google. Beberapa kami tampilkan utuh, tanpa diedit, dalam bahasa aslinya.`,
+    };
+
+const countLine: Bi = ALL_FIVE_STAR
+  ? { en: `${REVIEW_COUNT} reviews on Google · all five stars`, id: `${REVIEW_COUNT} ulasan di Google · semua bintang lima` }
+  : { en: `${REVIEW_COUNT} reviews on Google`, id: `${REVIEW_COUNT} ulasan di Google` };
+
+const STAR_SR: Bi = { en: "5 out of 5 stars", id: "5 dari 5 bintang" };
+---
+
+<section class="section cream rv" id="reviews" aria-labelledby="reviews-title">
   <div class="container">
-    <div class="section-head reveal">
-      <span class="eyebrow" data-en="Reviews" data-id="Ulasan">Reviews</span>
-      <h2>
-        <span data-en="Thirteen five-star reviews" data-id="Tiga belas ulasan bintang lima">Thirteen five-star reviews</span>
-        {" "}
-        <span class="italic" data-en="on Google." data-id="di Google.">on Google.</span>
-      </h2>
+
+    <!-- 1. Head: claim + proof summary -->
+    <div class="rv-head">
+      <div class="section-head reveal">
+        <span class="eyebrow" data-en="Reviews" data-id="Ulasan">Reviews</span>
+        <h2 id="reviews-title">
+          <span data-en="Why people keep" data-id="Kenapa pelanggan">Why people keep</span>
+          {" "}
+          <span class="italic" data-en="letting us back in." data-id="terus percaya pada kami.">letting us back in.</span>
+        </h2>
+        <p class="rv-lead" data-en={lead.en} data-id={lead.id}>{lead.en}</p>
+      </div>
+
+      <div class="rv-rating reveal">
+        <div class="rv-rating-top">
+          <span class="rv-score" data-en={RATING_EN} data-id={RATING_ID}>{RATING_EN}</span>
+          <div class="rv-rating-detail">
+            <span class="rv-stars" aria-hidden="true">★★★★★</span>
+            <span class="sr-only" data-en={`out of 5 stars on Google`} data-id={`dari 5 bintang di Google`}>out of 5 stars on Google</span>
+            <span class="rv-rating-count" data-en={countLine.en} data-id={countLine.id}>{countLine.en}</span>
+          </div>
+        </div>
+        <a class="rv-rating-link" href={MAPS_URL} target="_blank" rel="noopener">
+          <svg class="rv-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span data-en={`Read all ${REVIEW_COUNT} on Google Maps`} data-id={`Baca semua ${REVIEW_COUNT} di Google Maps`}>Read all {REVIEW_COUNT} on Google Maps</span>
+          <span class="sr-only" data-en="(opens in a new tab)" data-id="(buka di tab baru)">(opens in a new tab)</span>
+          <svg class="rv-ico rv-ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><polyline points="8 7 17 7 17 16"/></svg>
+        </a>
+      </div>
     </div>
 
-    <div class="testi-grid reveal-stagger">
-      <article class="testi-card">
-        <div class="testi-stars" aria-label="5 out of 5">★★★★★</div>
-        <p>
-          We were looking for a new cleaner as the last one was not so friendly and not cleaning well. We were sooo happy with the boys. Always the biggest smile, very good communication and they were cleaning very well! Thank you guys
+    <!-- 2. What customers praise (Google's own topic tags; not interactive) -->
+    <div class="rv-themes reveal">
+      <p class="rv-themes-label" id="rv-themes-label" data-en="Mentioned most in our Google reviews" data-id="Paling sering disebut di ulasan Google kami">Mentioned most in our Google reviews</p>
+      <ul class="rv-theme-list" aria-labelledby="rv-themes-label">
+        {themes.map((t) => (
+          <li class="rv-theme" data-en={t.en} data-id={t.id}>{t.en}</li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- 3. The proof, in their words -->
+    <div class="rv-grid reveal-stagger">
+      <figure class={HERO_LONG ? "rv-card rv-hero is-long" : "rv-card rv-hero"}>
+        <span class="rv-tag" data-en="Featured review" data-id="Ulasan pilihan">Featured review</span>
+        <span class="rv-mark" aria-hidden="true">&ldquo;</span>
+        <span class="sr-only" data-en={STAR_SR.en} data-id={STAR_SR.id}>{STAR_SR.en}</span>
+        <blockquote lang="en">
+          {fParts
+            ? <p>{fParts[0]}<em>{fParts[1]}</em>{fParts[2]}</p>
+            : <p>{featured.text}</p>}
+        </blockquote>
+        <figcaption class="rv-by">
+          <strong>{featured.name}</strong>
+          <span class="rv-stars rv-stars-sm" aria-hidden="true">★★★★★</span>
+          <span data-en={featured.meta.en} data-id={featured.meta.id}>{featured.meta.en}</span>
+        </figcaption>
+      </figure>
+
+      {side.map((r) => (
+        <figure class="rv-card">
+          <span class="rv-stars rv-stars-sm" aria-hidden="true">★★★★★</span>
+          <span class="sr-only" data-en={STAR_SR.en} data-id={STAR_SR.id}>{STAR_SR.en}</span>
+          <blockquote lang="en"><p>{r.text}</p></blockquote>
+          <figcaption class="rv-by">
+            <strong>{r.name}</strong>
+            <span data-en={r.meta.en} data-id={r.meta.id}>{r.meta.en}</span>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+
+    <!-- 4. Bridge to booking: the review that answers "is it a hassle to book?" -->
+    <div class="rv-cta reveal">
+      <figure class="rv-cta-quote">
+        <span class="sr-only" data-en={STAR_SR.en} data-id={STAR_SR.id}>{STAR_SR.en}</span>
+        <blockquote lang="en"><p>{bridge.text}</p></blockquote>
+        <figcaption class="rv-by">
+          <strong>{bridge.name}</strong>
+          <span class="rv-stars rv-stars-sm" aria-hidden="true">★★★★★</span>
+          <span data-en={bridge.meta.en} data-id={bridge.meta.id}>{bridge.meta.en}</span>
+        </figcaption>
+      </figure>
+
+      <div class="rv-cta-act">
+        <p class="rv-cta-ask" data-en="Want the same team at your villa?" data-id="Mau tim yang sama di villa Anda?">Want the same team at your villa?</p>
+        <a class="btn btn-primary rv-cta-btn" href={WA_BOOK} target="_blank" rel="noopener">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span data-en="Message us on WhatsApp" data-id="Chat WhatsApp">Message us on WhatsApp</span>
+          <span class="sr-only" data-en="(opens WhatsApp)" data-id="(membuka WhatsApp)">(opens WhatsApp)</span>
+        </a>
+        <p class="rv-cta-meta">
+          <span data-en="Open every day, 08.00–18.00" data-id="Buka setiap hari, 08.00–18.00">Open every day, 08.00–18.00</span>
+          <span aria-hidden="true">·</span>
+          <a class="rv-cta-alt" href="#contact" data-en="or use the booking form" data-id="atau isi form booking">or use the booking form</a>
         </p>
-        <div class="testi-meta">
-          <strong>Maria G</strong>
-          <span>Google · Local Guide</span>
-        </div>
-      </article>
-
-      <article class="testi-card">
-        <div class="testi-stars" aria-label="5 out of 5">★★★★★</div>
-        <p>High quality team to cleaned guest house in kuta lombok</p>
-        <div class="testi-meta">
-          <strong>Ahir Man</strong>
-          <span>Google · 2026</span>
-        </div>
-      </article>
-
-      <article class="testi-card">
-        <div class="testi-stars" aria-label="5 out of 5">★★★★★</div>
-        <p>Good cleaning service. Easy to book and always on time</p>
-        <div class="testi-meta">
-          <strong>William Price</strong>
-          <span>Google · 2026</span>
-        </div>
-      </article>
+      </div>
     </div>
 
-    <div class="testi-cta reveal">
-      <a
-        class="btn btn-ghost"
-        href="https://www.google.com/maps/place/Goclean+kuta+lombok/@-8.8838047,116.2701107,944m/data=!3m2!1e3!4b1!4m6!3m5!1s0x2dcda978513916cd:0x481e9a741050acee!8m2!3d-8.88381!4d116.2726856!16s%2Fg%2F11ykw22_5x"
-        target="_blank"
-        rel="noopener"
-      >
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        <span data-en="Read all reviews on Google Maps" data-id="Baca semua ulasan di Google Maps">Read all reviews on Google Maps</span>
-      </a>
-      <span data-en="GoClean Group · Kuta, Lombok Tengah" data-id="GoClean Group · Kuta, Lombok Tengah">GoClean Group · Kuta, Lombok Tengah</span>
-    </div>
   </div>
 </section>

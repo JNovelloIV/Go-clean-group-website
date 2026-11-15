@@ -1,0 +1,59 @@
+---
+import { BOOKING_URL } from "../config";
+const href = BOOKING_URL ? `${BOOKING_URL.replace(/\/+$/, "")}/book` : null;
+const points = [
+  { en: "Pick a time that's actually free", id: "Pilih jam yang benar-benar kosong", en2: "You only see times when our crew is free, so no back and forth.", id2: "Anda hanya melihat jam saat tim kami kosong, jadi tidak perlu bolak-balik." },
+  { en: "A founder confirms within the hour", id: "Pendiri kami konfirmasi dalam satu jam", en2: "One of us checks your request and confirms on WhatsApp during working hours.", id2: "Salah satu dari kami mengecek permintaan Anda dan konfirmasi lewat WhatsApp di jam kerja." },
+  { en: "Pay after the clean", id: "Bayar setelah selesai dibersihkan", en2: "Cash or bank transfer, once you've checked the work. We never ask you to send a receipt.", id2: "Tunai atau transfer bank, setelah Anda cek hasilnya. Kami tidak pernah meminta Anda kirim struk." },
+];
+---
+{href && (
+  <section class="section paper" id="book" aria-labelledby="book-title">
+    <div class="container">
+      <div class="book-grid reveal">
+        <div class="section-head" style="margin-bottom:0;">
+          <span class="eyebrow" data-en="Book online" data-id="Booking online">Book online</span>
+          <h2 id="book-title">
+            <span data-en="Pick your time." data-id="Pilih jam Anda.">Pick your time.</span>
+            {" "}
+            <span class="italic" data-en="We'll take it from there." data-id="Sisanya kami urus.">We'll take it from there.</span>
+          </h2>
+          <p
+            class="lead"
+            style="margin-top:14px;"
+            data-en="Prefer to do it yourself? Choose your villa, your day and a free slot in a couple of minutes. WhatsApp is still here whenever you'd rather chat."
+            data-id="Lebih suka atur sendiri? Pilih villa, hari, dan jam kosong dalam beberapa menit. WhatsApp tetap ada kapan pun Anda ingin chat."
+          >
+            Prefer to do it yourself? Choose your villa, your day and a free slot in a couple of minutes. WhatsApp is still here whenever you'd rather chat.
+          </p>
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href={href}>
+              <span data-en="Book online" data-id="Booking online">Book online</span>
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+            </a>
+          </div>
+        </div>
+        <ul class="book-points">
+          {points.map((p) => (
+            <li>
+              <strong data-en={p.en} data-id={p.id}>{p.en}</strong>
+              <span data-en={p.en2} data-id={p.id2}>{p.en2}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .book-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(28px, 5vw, 64px); align-items: center; }
+  .book-points { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .book-points li {
+    background: var(--cream); border: 1px solid var(--line); border-radius: var(--r-lg);
+    padding: 18px 20px; display: grid; gap: 4px;
+  }
+  .book-points strong { color: var(--forest); font-weight: 600; }
+  .book-points span { color: var(--ink-2); }
+  @media (max-width: 880px) { .book-grid { grid-template-columns: 1fr; } }
+</style>

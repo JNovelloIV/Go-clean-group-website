@@ -10,6 +10,7 @@ const SECTION_DEFS: { id: string; en: string; id_: string }[] = [
   { id: "reviews",  en: "Reviews",      id_: "Ulasan" },
   { id: "area",     en: "Service area", id_: "Area" },
   { id: "faq",      en: "FAQ",          id_: "FAQ" },
+  { id: "book",     en: "Book online",  id_: "Booking online" },
   { id: "contact",  en: "Book now",     id_: "Pesan" },
 ];
 

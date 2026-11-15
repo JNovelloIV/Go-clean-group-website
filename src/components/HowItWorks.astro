@@ -1,9 +1,26 @@
+---
+import { BOOKING_URL, BOOKING_SHOWS_FREE_SLOTS } from "../config";
+// With online booking switched on, steps 1-2 describe booking online or on WhatsApp.
+// Wording follows BOOKING_SHOWS_FREE_SLOTS so the page never promises live free times before they exist.
+const online = Boolean(BOOKING_URL);
+const head = online
+  ? { en: "From booking to a clean villa,", id: "Dari booking ke villa bersih," }
+  : { en: "From a message to a clean villa,", id: "Dari pesan singkat ke villa bersih," };
+const step1 = !online
+  ? { h: { en: "Send a message", id: "Kirim pesan" }, p: { en: "WhatsApp us with your villa size, address, and what you need. EN or ID — both work.", id: "Chat WhatsApp: ukuran villa, alamat, dan kebutuhan Anda. EN atau ID, sama-sama bisa." } }
+  : BOOKING_SHOWS_FREE_SLOTS
+    ? { h: { en: "Book online or message us", id: "Booking online atau chat kami" }, p: { en: "Pick your service, villa size and a free time online in two minutes, with the price shown up front. Or just WhatsApp us. EN or ID — both work.", id: "Pilih layanan, ukuran villa, dan jam kosong secara online dalam dua menit, harga langsung terlihat. Atau chat WhatsApp saja. EN atau ID, sama-sama bisa." } }
+    : { h: { en: "Book online or message us", id: "Booking online atau chat kami" }, p: { en: "Choose your service, villa size and the day and time you'd like, online in two minutes, with the price shown up front. Or just WhatsApp us. EN or ID — both work.", id: "Pilih layanan, ukuran villa, serta hari dan jam yang Anda mau secara online dalam dua menit, harga langsung terlihat. Atau chat WhatsApp saja. EN atau ID, sama-sama bisa." } };
+const step2 = online
+  ? { h: { en: "We confirm on WhatsApp", id: "Kami konfirmasi lewat WhatsApp" }, p: { en: "One of us confirms your time and the clear total, usually within 30 minutes and always within the hour during work hours (07.00–17.00). No haggling.", id: "Salah satu dari kami mengonfirmasi jam dan total yang jelas, biasanya dalam 30 menit dan paling lama satu jam di jam kerja (07.00–17.00). Tanpa tawar-menawar." } }
+  : { h: { en: "Get a clear price back", id: "Dapat harga yang jelas" }, p: { en: "We'll get back to you as soon as we can during work hours. Clear total, no haggling.", id: "Kami akan membalas secepat mungkin di jam kerja. Total jelas, tanpa tawar-menawar." } };
+---
 <section class="section paper" id="how">
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow" data-en="How it works" data-id="Cara kerja">How it works</span>
       <h2>
-        <span data-en="From a message to a clean villa," data-id="Dari pesan singkat ke villa bersih,">From a message to a clean villa,</span>
+        <span data-en={head.en} data-id={head.id}>{head.en}</span>
         {" "}
         <span class="italic" data-en="in four steps." data-id="dalam empat langkah.">in four steps.</span>
       </h2>
@@ -11,22 +28,12 @@
 
     <div class="steps reveal-stagger">
       <div class="step">
-        <h3 data-en="Send a message" data-id="Kirim pesan">Send a message</h3>
-        <p
-          data-en="WhatsApp us with your villa size, address, and what you need. EN or ID — both work."
-          data-id="Chat WhatsApp: ukuran villa, alamat, dan kebutuhan Anda. EN atau ID, sama-sama bisa."
-        >
-          WhatsApp us with your villa size, address, and what you need. EN or ID — both work.
-        </p>
+        <h3 data-en={step1.h.en} data-id={step1.h.id}>{step1.h.en}</h3>
+        <p data-en={step1.p.en} data-id={step1.p.id}>{step1.p.en}</p>
       </div>
       <div class="step">
-        <h3 data-en="Get a clear price back" data-id="Dapat harga yang jelas">Get a clear price back</h3>
-        <p
-          data-en="We'll get back to you as soon as we can during work hours. Clear total, no haggling."
-          data-id="Kami akan membalas secepat mungkin di jam kerja. Total jelas, tanpa tawar-menawar."
-        >
-          We'll get back to you as soon as we can during work hours. Clear total, no haggling.
-        </p>
+        <h3 data-en={step2.h.en} data-id={step2.h.id}>{step2.h.en}</h3>
+        <p data-en={step2.p.en} data-id={step2.p.id}>{step2.p.en}</p>
       </div>
       <div class="step">
         <h3 data-en="Team arrives prepared" data-id="Tim datang siap">Team arrives prepared</h3>

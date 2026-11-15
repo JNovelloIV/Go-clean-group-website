@@ -9,4 +9,4 @@ export const BOOKING_URL: string | null = "https://go-clean-booking.pages.dev";
 // names a preferred time and a founder confirms it on WhatsApp. That is what it does today,
 // because the calendar connection is not switched on yet. When it is, set this to true and
 // the "Book online" copy goes back to "pick a free slot".
-export const BOOKING_SHOWS_FREE_SLOTS = false;
+export const BOOKING_SHOWS_FREE_SLOTS = true;

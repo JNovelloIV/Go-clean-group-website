@@ -42,7 +42,8 @@ for (const file of pages) {
     }
   }
   const text = html.toLowerCase();
-  for (const bad of ["bukti transfer", "proof of payment", "payment proof"]) {
+  // Never ask a customer for payment proof (English and Bahasa).
+  for (const bad of ["bukti transfer", "bukti pembayaran", "bukti bayar", "unggah bukti", "kirim bukti", "proof of payment", "payment proof", "upload receipt", "upload your receipt", "screenshot of the transfer"]) {
     if (text.includes(bad)) errors.push(`${rel}: contains "${bad}"`);
   }
   const bookLinks = hrefs.filter((h) => /\/book(\/|\?|#|$)/.test(h) && /^https?:/.test(h));

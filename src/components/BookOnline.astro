@@ -1,11 +1,19 @@
 ---
-import { BOOKING_URL } from "../config";
+import { BOOKING_URL, BOOKING_SHOWS_FREE_SLOTS } from "../config";
 const href = BOOKING_URL ? `${BOOKING_URL.replace(/\/+$/, "")}/book` : null;
 const points = [
-  { en: "Pick a time that's actually free", id: "Pilih jam yang benar-benar kosong", en2: "You only see times when our crew is free, so no back and forth.", id2: "Anda hanya melihat jam saat tim kami kosong, jadi tidak perlu bolak-balik." },
+  BOOKING_SHOWS_FREE_SLOTS
+    ? { en: "Pick a time that's actually free", id: "Pilih jam yang benar-benar kosong", en2: "You only see times when our crew is free, so no back and forth.", id2: "Anda hanya melihat jam saat tim kami kosong, jadi tidak perlu bolak-balik." }
+    : { en: "Tell us the time that suits you", id: "Sebutkan waktu yang cocok untuk Anda", en2: "Pick a day and a time you'd like. We check it against our crew's schedule.", id2: "Pilih hari dan jam yang Anda inginkan. Kami cocokkan dengan jadwal tim kami." },
   { en: "A founder confirms within the hour", id: "Pendiri kami konfirmasi dalam satu jam", en2: "One of us checks your request and confirms on WhatsApp during working hours.", id2: "Salah satu dari kami mengecek permintaan Anda dan konfirmasi lewat WhatsApp di jam kerja." },
   { en: "Pay after the clean", id: "Bayar setelah selesai dibersihkan", en2: "Cash or bank transfer, once you've checked the work. We never ask you to send a receipt.", id2: "Tunai atau transfer bank, setelah Anda cek hasilnya. Kami tidak pernah meminta Anda kirim struk." },
 ];
+const title = BOOKING_SHOWS_FREE_SLOTS
+  ? { en: "Pick your time.", id: "Pilih jam Anda." }
+  : { en: "Tell us when suits you.", id: "Kapan waktu yang cocok?" };
+const lead = BOOKING_SHOWS_FREE_SLOTS
+  ? { en: "Prefer to do it yourself? Choose your villa, your day and a free slot in a couple of minutes. WhatsApp is still here whenever you'd rather chat.", id: "Lebih suka atur sendiri? Pilih villa, hari, dan jam kosong dalam beberapa menit. WhatsApp tetap ada kapan pun Anda ingin chat." }
+  : { en: "Prefer to do it yourself? Choose your villa and tell us when suits you. We confirm the time on WhatsApp, and you can still chat with us there whenever you like.", id: "Lebih suka atur sendiri? Pilih villa Anda dan beri tahu kami kapan waktu yang cocok. Kami konfirmasi jamnya lewat WhatsApp, dan Anda tetap bisa chat dengan kami di sana kapan saja." };
 ---
 {href && (
   <section class="section paper" id="book" aria-labelledby="book-title">
@@ -14,17 +22,12 @@ const points = [
         <div class="section-head" style="margin-bottom:0;">
           <span class="eyebrow" data-en="Book online" data-id="Booking online">Book online</span>
           <h2 id="book-title">
-            <span data-en="Pick your time." data-id="Pilih jam Anda.">Pick your time.</span>
+            <span data-en={title.en} data-id={title.id}>{title.en}</span>
             {" "}
             <span class="italic" data-en="We'll take it from there." data-id="Sisanya kami urus.">We'll take it from there.</span>
           </h2>
-          <p
-            class="lead"
-            style="margin-top:14px;"
-            data-en="Prefer to do it yourself? Choose your villa, your day and a free slot in a couple of minutes. WhatsApp is still here whenever you'd rather chat."
-            data-id="Lebih suka atur sendiri? Pilih villa, hari, dan jam kosong dalam beberapa menit. WhatsApp tetap ada kapan pun Anda ingin chat."
-          >
-            Prefer to do it yourself? Choose your villa, your day and a free slot in a couple of minutes. WhatsApp is still here whenever you'd rather chat.
+          <p class="lead" style="margin-top:14px;" data-en={lead.en} data-id={lead.id}>
+            {lead.en}
           </p>
           <div class="hero-ctas">
             <a class="btn btn-primary" href={href}>
